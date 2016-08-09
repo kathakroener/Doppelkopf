@@ -5,65 +5,58 @@
  */
 package Doppelkopf;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  *
  * @author katha
  */
 public class Stich {
-    private Karte spieler1;
-    private Karte spieler2;
-    private Karte spieler3;
-    private Karte spieler4;
+    private LinkedHashMap<Karte, Spieler> mapKarteSpieler;
     private int punkte;
     private int fuchsGefangen; // 0 = nichts, 1 = Re hat Fuchs gefangen, 2 = Contra hat Fuchs gefangen
-    private boolean stichGehoertTeam; // 0 = Contra, 1 = Re
+    private Spieler stichGehoert;
+    private Karte hoechste;
+    
     
     public void zaehlen(){
-        punkte = spieler1.getWert() + spieler2.getWert() + spieler3.getWert() + spieler4.getWert();
+        for(Karte k : mapKarteSpieler.keySet()){
+            punkte += k.getWert();
+        }
     }
     
     public void stichGehoert(){
-        Karte hoechste = spieler1;
-        if(spieler2.getId() > hoechste.getId()){
-            hoechste = spieler2;
-        } else if(spieler3.getId() > hoechste.getId()){
-            hoechste = spieler3;
-        } else if(spieler4.getId() > hoechste.getId()){
-            hoechste = spieler4;
+        hoechste = null;
+        stichGehoert = null;
+        for(Karte k : mapKarteSpieler.keySet()){
+            if(stichGehoert == null || k.getId() > hoechste.getId()){
+                stichGehoert = mapKarteSpieler.get(k);
+                hoechste = k;
+            }
+        }
+    }
+    
+    public void fuchsGefangen(){
+        boolean fuchsGefunden = false;
+        for(Karte fuchs : mapKarteSpieler.keySet()){
+            if(fuchs.isIstTrumpf() && fuchs.getId() == 2){
+                fuchsGefunden = true;
+                for(Karte hoeherAlsFuchs : mapKarteSpieler.keySet()){
+                    if(hoeherAlsFuchs.isIstTrumpf() && hoeherAlsFuchs.getId() > 2){
+                        if(mapKarteSpieler.get(hoeherAlsFuchs).isIstRe() == true && mapKarteSpieler.get(fuchs).isIstRe() == false){
+                            fuchsGefangen = 1;
+                        } else if(mapKarteSpieler.get(hoeherAlsFuchs).isIstRe() == false && mapKarteSpieler.get(fuchs).isIstRe() == true){
+                            fuchsGefangen = 2;
+                        }
+                    }
+                }  
+            } else{
+                fuchsGefangen = 0;
+            }
         }
     }
 
-    public Karte getSpieler1() {
-        return spieler1;
-    }
-
-    public void setSpieler1(Karte spieler1) {
-        this.spieler1 = spieler1;
-    }
-
-    public Karte getSpieler2() {
-        return spieler2;
-    }
-
-    public void setSpieler2(Karte spieler2) {
-        this.spieler2 = spieler2;
-    }
-
-    public Karte getSpieler3() {
-        return spieler3;
-    }
-
-    public void setSpieler3(Karte spieler3) {
-        this.spieler3 = spieler3;
-    }
-
-    public Karte getSpieler4() {
-        return spieler4;
-    }
-
-    public void setSpieler4(Karte spieler4) {
-        this.spieler4 = spieler4;
-    }
 
     public int getPunkte() {
         return punkte;
@@ -79,6 +72,22 @@ public class Stich {
 
     public void setFuchsGefangen(int fuchsGefangen) {
         this.fuchsGefangen = fuchsGefangen;
+    }
+
+    public Map<Karte, Spieler> getMapKarteSpieler() {
+        return mapKarteSpieler;
+    }
+
+    public void setMapKarteSpieler(Map<Karte, Spieler> mapKarteSpieler) {
+        this.mapKarteSpieler = mapKarteSpieler;
+    }
+
+    public Spieler getStichGehoert() {
+        return stichGehoert;
+    }
+
+    public void setStichGehoert(Spieler stichGehoert) {
+        this.stichGehoert = stichGehoert;
     }
     
     

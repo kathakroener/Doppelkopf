@@ -15,4 +15,30 @@ public class Spieler {
     private String name;
     private boolean istRe;
     private ArrayList<Karte> blatt;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isIstRe() {
+        return istRe;
+    }
+
+    public void setIstRe(boolean istRe) {
+        this.istRe = istRe;
+    }
+
+    public ArrayList<Karte> getBlatt() {
+        return blatt;
+    }
+
+    public void setBlatt(ArrayList<Karte> blatt) {
+        this.blatt = blatt;
+    }
+    
+    
 }

@@ -6,45 +6,53 @@
 package Doppelkopf;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  *
  * @author katha
  */
 public class Runde {
-    private int re;
-    private int contra;
+    private int punkteRe;
+    private int punkteContra;
     private ArrayList<Stich> stiche;
+    private LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler;
+    private Spieler kommtRaus;
     
-    public int berechnePunkte(){
-        
+    public void berechnePunkte(){
+        for(Stich s : stiche){
+            if(s.getStichGehoert().isIstRe()){
+                punkteRe += s.getPunkte();
+            }
+        }
+        punkteContra = 240 - punkteRe;
     }
     
     
-    public int berechneTacken(){
+    public int berechneTackenRe(){
         int tacken = 0;
-        if(re <= 120){
+        if(punkteRe <= 120){
             tacken = tacken - 2;  //keine 120, gegen
-            if(re < 90){
+            if(punkteRe < 90){
                 tacken--;
-                if(re < 60){
+                if(punkteRe < 60){
                     tacken--;
-                    if(re < 30){
+                    if(punkteRe < 30){
                         tacken--;
-                        if(re == 0){
+                        if(punkteRe == 0){
                             tacken--;
                         }
                     }
                 }
             }
         }
-        if(re > 120){
+        if(punkteRe > 120){
             tacken++;
-            if(re > 150){
+            if(punkteRe > 150){
                 tacken++;
-                if(re > 180){
+                if(punkteRe > 180){
                     tacken++;
-                    if(re > 210){
+                    if(punkteRe > 210){
                         tacken++;
                     }
                 }
