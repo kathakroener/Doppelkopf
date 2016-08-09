@@ -78,7 +78,7 @@ public class Stich {
         return mapKarteSpieler;
     }
 
-    public void setMapKarteSpieler(Map<Karte, Spieler> mapKarteSpieler) {
+    public void setMapKarteSpieler(LinkedHashMap<Karte, Spieler> mapKarteSpieler) {
         this.mapKarteSpieler = mapKarteSpieler;
     }
 
