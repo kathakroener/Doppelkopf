@@ -18,54 +18,193 @@ public class Runde {
     private ArrayList<Stich> stiche;
     private LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler;
     private Spieler kommtRaus;
+    private ArrayList<Spieler> re;
+    private ArrayList<Spieler> contra;
+    private LinkedHashMap<ArrayList<Karte>, Spieler> mapBlattSpieler;
+    private int tackenRe;
+    
+    
+    public void istRe(){
+        for(ArrayList<Karte> blatt : mapBlattSpieler.keySet()){
+            for(Karte k : blatt){
+                if(k.isIstTrumpf() && k.getId() == 10){
+                    re.add(mapBlattSpieler.get(blatt));
+                }
+            }
+        }
+    }
+    
+    public void istContra(){
+        if(!re.isEmpty()){
+            for(Spieler sp : mapBlattSpieler.values()){
+                if(!re.contains(sp)){
+                    contra.add(sp);
+                }
+            }
+        }
+    }
     
     public void berechnePunkte(){
         for(Stich s : stiche){
-            if(s.getStichGehoert().isIstRe()){
+            if(re.contains(s.getStichGehoert())){
                 punkteRe += s.getPunkte();
             }
         }
         punkteContra = 240 - punkteRe;
     }
     
-    
-    public int berechneTackenRe(){
-        int tacken = 0;
+    public void berechneTackenRe(){
+        tackenRe = 0;
         if(punkteRe <= 120){
-            tacken = tacken - 2;  //keine 120, gegen
+            tackenRe = tackenRe - 2;  //keine 120, gegen
             if(punkteRe < 90){
-                tacken--;
+                tackenRe--;
                 if(punkteRe < 60){
-                    tacken--;
+                    tackenRe--;
                     if(punkteRe < 30){
-                        tacken--;
+                        tackenRe--;
                         if(punkteRe == 0){
-                            tacken--;
+                            tackenRe--;
                         }
                     }
                 }
             }
         }
         if(punkteRe > 120){
-            tacken++;
+            tackenRe++;
             if(punkteRe > 150){
-                tacken++;
+                tackenRe++;
                 if(punkteRe > 180){
-                    tacken++;
+                    tackenRe++;
                     if(punkteRe > 210){
-                        tacken++;
+                        tackenRe++;
                     }
                 }
             }
         }
-        for(int i = 0; i < stiche.size(); i++){
-            if(stiche.get(i).getFuchsGefangen() == 1){
-                tacken++;
-            }
-            if(stiche.get(i).getFuchsGefangen() == 2){
-                tacken--;
+        fuchsGefangen();
+    }
+    
+    
+    public void fuchsGefangen(){
+        Karte fuchsGefunden = null;
+        for(Stich s : stiche){
+            for(Karte k : s.getMapKarteSpieler().keySet()){
+                if(k.isIstTrumpf() && k.getId() == 2){
+                    if(s.getHoechste().isIstTrumpf() && s.getHoechste().getId() > 2){
+                        if(re.contains(s.getStichGehoert()) && contra.contains(s.getMapKarteSpieler().get(k))){
+                            tackenRe++;
+                        } else if(contra.contains(s.getStichGehoert()) && re.contains(s.getMapKarteSpieler().get(k))){
+                            tackenRe--;
+                        }
+                    }
+                    if(fuchsGefunden != null){
+                        if(re.contains(s.getMapKarteSpieler().get(k)) && contra.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
+                            tackenRe--;
+                        } else if(contra.contains(s.getMapKarteSpieler().get(k)) && re.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
+                            tackenRe++;
+                        }
+                    }
+                    fuchsGefunden = k;
+                }
             }
         }
-        return tacken;
     }
+    
+
+    
+    public boolean rundeBeendet(){
+        if(stiche.size() == 10){
+            return true;
+        }
+        return false;
+    }
+    
+    public Runde(){
+    }
+
+    public Runde(int punkteRe, int punkteContra, ArrayList<Stich> stiche, LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler, Spieler kommtRaus, ArrayList<Spieler> re, ArrayList<Spieler> contra, LinkedHashMap<ArrayList<Karte>, Spieler> mapBlattSpieler) {
+        this.punkteRe = punkteRe;
+        this.punkteContra = punkteContra;
+        this.stiche = stiche;
+        this.mapAnsagenSpieler = mapAnsagenSpieler;
+        this.kommtRaus = kommtRaus;
+        this.re = re;
+        this.contra = contra;
+        this.mapBlattSpieler = mapBlattSpieler;
+    }
+
+    public int getPunkteRe() {
+        return punkteRe;
+    }
+
+    public void setPunkteRe(int punkteRe) {
+        this.punkteRe = punkteRe;
+    }
+
+    public int getPunkteContra() {
+        return punkteContra;
+    }
+
+    public void setPunkteContra(int punkteContra) {
+        this.punkteContra = punkteContra;
+    }
+
+    public ArrayList<Stich> getStiche() {
+        return stiche;
+    }
+
+    public void setStiche(ArrayList<Stich> stiche) {
+        this.stiche = stiche;
+    }
+
+    public LinkedHashMap<ANSAGEN, Spieler> getMapAnsagenSpieler() {
+        return mapAnsagenSpieler;
+    }
+
+    public void setMapAnsagenSpieler(LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler) {
+        this.mapAnsagenSpieler = mapAnsagenSpieler;
+    }
+
+    public Spieler getKommtRaus() {
+        return kommtRaus;
+    }
+
+    public void setKommtRaus(Spieler kommtRaus) {
+        this.kommtRaus = kommtRaus;
+    }
+
+    public ArrayList<Spieler> getRe() {
+        return re;
+    }
+
+    public void setRe(ArrayList<Spieler> re) {
+        this.re = re;
+    }
+
+    public ArrayList<Spieler> getContra() {
+        return contra;
+    }
+
+    public void setContra(ArrayList<Spieler> contra) {
+        this.contra = contra;
+    }
+
+    public LinkedHashMap<ArrayList<Karte>, Spieler> getMapBlattSpieler() {
+        return mapBlattSpieler;
+    }
+
+    public void setMapBlattSpieler(LinkedHashMap<ArrayList<Karte>, Spieler> mapBlattSpieler) {
+        this.mapBlattSpieler = mapBlattSpieler;
+    }
+
+    public int getTackenRe() {
+        return tackenRe;
+    }
+
+    public void setTackenRe(int tackenRe) {
+        this.tackenRe = tackenRe;
+    }
+    
+    
 }

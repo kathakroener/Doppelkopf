@@ -15,7 +15,6 @@ import java.util.Map;
 public class Stich {
     private LinkedHashMap<Karte, Spieler> mapKarteSpieler;
     private int punkte;
-    private int fuchsGefangen; // 0 = nichts, 1 = Re hat Fuchs gefangen, 2 = Contra hat Fuchs gefangen
     private Spieler stichGehoert;
     private Karte hoechste;
     
@@ -37,26 +36,6 @@ public class Stich {
         }
     }
     
-    public void fuchsGefangen(){
-        boolean fuchsGefunden = false;
-        for(Karte fuchs : mapKarteSpieler.keySet()){
-            if(fuchs.isIstTrumpf() && fuchs.getId() == 2){
-                fuchsGefunden = true;
-                for(Karte hoeherAlsFuchs : mapKarteSpieler.keySet()){
-                    if(hoeherAlsFuchs.isIstTrumpf() && hoeherAlsFuchs.getId() > 2){
-                        if(mapKarteSpieler.get(hoeherAlsFuchs).isIstRe() == true && mapKarteSpieler.get(fuchs).isIstRe() == false){
-                            fuchsGefangen = 1;
-                        } else if(mapKarteSpieler.get(hoeherAlsFuchs).isIstRe() == false && mapKarteSpieler.get(fuchs).isIstRe() == true){
-                            fuchsGefangen = 2;
-                        }
-                    }
-                }  
-            } else{
-                fuchsGefangen = 0;
-            }
-        }
-    }
-
 
     public int getPunkte() {
         return punkte;
@@ -64,14 +43,6 @@ public class Stich {
 
     public void setPunkte(int punkte) {
         this.punkte = punkte;
-    }
-
-    public int getFuchsGefangen() {
-        return fuchsGefangen;
-    }
-
-    public void setFuchsGefangen(int fuchsGefangen) {
-        this.fuchsGefangen = fuchsGefangen;
     }
 
     public Map<Karte, Spieler> getMapKarteSpieler() {
@@ -88,6 +59,14 @@ public class Stich {
 
     public void setStichGehoert(Spieler stichGehoert) {
         this.stichGehoert = stichGehoert;
+    }
+
+    public Karte getHoechste() {
+        return hoechste;
+    }
+
+    public void setHoechste(Karte hoechste) {
+        this.hoechste = hoechste;
     }
     
     
