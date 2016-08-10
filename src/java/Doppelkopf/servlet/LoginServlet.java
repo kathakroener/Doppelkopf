@@ -5,13 +5,18 @@
  */
 package Doppelkopf.servlet;
 
+import Controller.LoginController;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -19,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Login", urlPatterns = {"/Login"})
 public class LoginServlet extends HttpServlet {
+    
+    HttpSession session;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,7 +44,7 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Login</title>");
+            out.println("<title>Kurrelaner Dullentreff - Login</title>");
             out.println("<script src='js/jquery-3.1.0.js'></script>");
             out.println("<script src='js/bootstrap.js'></script>");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");
@@ -54,11 +61,11 @@ public class LoginServlet extends HttpServlet {
             out.println("<form action='"+request.getContextPath()+"/Login' method='POST' class=\"form-inline\" role=\"form\">\n" +
 "    <div class=\"form-group\">\n" +
 "      <label class=\"sr-only\" for=\"username\">Username:</label>\n" +
-"      <input type=\"text\" class=\"form-control\" id=\"username\" placeholder=\"Username\">\n" +
+"      <input type=\"text\" class=\"form-control\" id=\"username\" name=\"username\" placeholder=\"Username\">\n" +
 "    </div>\n" +
 "    <div class=\"form-group\">\n" +
-"      <label class=\"sr-only\" for=\"pwd\">Password:</label>\n" +
-"      <input type=\"password\" class=\"form-control\" id=\"pwd\" placeholder=\"Passwort\">\n" +
+"      <label class=\"sr-only\" for=\"passwort\">Passwort:</label>\n" +
+"      <input type=\"password\" class=\"form-control\" id=\"passwort\" name=\"passwort\" placeholder=\"Passwort\">\n" +
 "    </div>\n" +
 "    <button type=\"submit\" class=\"btn btn-default\">Login</button>\n" +
 "  </form>");
@@ -96,7 +103,22 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.addHeader("alertText", "Falscher Login");
+        
+        LoginController loginController = new LoginController();
+        try {
+            if(loginController.checkLogin(request.getParameter("username"), request.getParameter("passwort"))){
+                session = request.getSession();
+                session.setAttribute("username", request.getParameter("username"));
+                
+                response.sendRedirect(request.getContextPath() + "/Spiel");
+            }else{
+                response.addHeader("alertText", "Falscher Login");
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         processRequest(request, response);
     }
 

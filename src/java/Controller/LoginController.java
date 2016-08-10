@@ -5,21 +5,23 @@
  */
 package Controller;
 
+import DbModel.User;
+import java.sql.SQLException;
+
 /**
  *
  * @author hrs
  */
 public class LoginController {
     
-    public String doLogin(String username, String passwort){
-        if(checkLogin(username,passwort)){
-            return "/Spiel";
-        }else{
-            return "/Login";
+    public Boolean checkLogin(String username, String passwort) throws ClassNotFoundException, SQLException{
+        User user = DbController.getInstance().getUser(username);
+        if(user == null){
+            return false;
         }
-    }
-    
-    private Boolean checkLogin(String username, String passwort){
+        if(!user.getPasswort().equals(passwort)){
+            return false;
+        }
         return true;
     }
     

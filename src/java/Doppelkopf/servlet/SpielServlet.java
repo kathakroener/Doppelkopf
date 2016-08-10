@@ -33,14 +33,17 @@ public class SpielServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SpielServlet</title>");            
+            out.println("<title>Servlet SpielServlet</title>");    
+            out.println("<script src='js/jquery-3.1.0.js'></script>");
+            out.println("<script src='js/bootstrap.js'></script>");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-theme.css\">");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet SpielServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Hallo " + request.getSession().getAttribute("username") + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }

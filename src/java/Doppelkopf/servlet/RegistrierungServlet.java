@@ -37,10 +37,29 @@ public class RegistrierungServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegistrierungServlet</title>");            
+            out.println("<title>Servlet RegistrierungServlet</title>");  
+            out.println("<script src='js/jquery-3.1.0.js'></script>");
+            out.println("<script src='js/bootstrap.js'></script>");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-theme.css\">");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet RegistrierungServlet at " + request.getContextPath() + "</h1>");
+            out.println("<form action='"+request.getContextPath()+"/Registrierung' method='POST' role=\"form\">\n" +
+"    <div class=\"form-group\">\n" +
+"      <label class=\"sr-only\" for=\"username\">Username:</label>\n" +
+"      <input type=\"text\" class=\"form-control\" id=\"username\" placeholder=\"Username\">\n" +
+"    </div>\n" +
+"    <div class=\"form-group\">\n" +
+"      <label class=\"sr-only\" for=\"passwort\">Password:</label>\n" +
+"      <input type=\"password\" class=\"form-control\" id=\"passwort\" placeholder=\"Passwort\">\n" +
+"    </div>\n" +
+    "<div class=\"form-group\">\n" +
+"      <label class=\"sr-only\" for=\"passwort2\">Password:</label>\n" +
+"      <input type=\"password\" class=\"form-control\" id=\"passwort2\" placeholder=\"Passwort\">\n" +
+"    </div>\n" +
+"    <button type=\"submit\" class=\"btn btn-default\">Registrieren</button>\n" +
+"  </form>");
             out.println("</body>");
             out.println("</html>");
         }
