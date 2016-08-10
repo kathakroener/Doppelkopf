@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/katha/NetBeansProjects/PastAnalyse/Doppelkopf/src/java/Doppelkopf/Spieler.java</file>
-            <file>file:/home/katha/NetBeansProjects/PastAnalyse/Doppelkopf/src/java/Doppelkopf/Runde.java</file>
-            <file>file:/home/katha/NetBeansProjects/PastAnalyse/Doppelkopf/src/java/Doppelkopf/Karte.java</file>
-            <file>file:/home/katha/NetBeansProjects/PastAnalyse/Doppelkopf/src/java/Doppelkopf/Stich.java</file>
+            <file>file:/home/katha/NetBeansProjects/Doppelkopf/src/java/Doppelkopf/servlet/LoginServlet.java</file>
+            <file>file:/home/katha/NetBeansProjects/Doppelkopf/src/java/Doppelkopf/TRUMPF.java</file>
+            <file>file:/home/katha/NetBeansProjects/Doppelkopf/src/java/Doppelkopf/Spieler.java</file>
+            <file>file:/home/katha/NetBeansProjects/Doppelkopf/src/java/Doppelkopf/Runde.java</file>
+            <file>file:/home/katha/NetBeansProjects/Doppelkopf/src/java/Doppelkopf/Stich.java</file>
         </group>
     </open-files>
 </project-private>
