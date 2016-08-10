@@ -10,5 +10,5 @@ package Doppelkopf;
  * @author katha
  */
 public enum ANSAGEN {
-    
+    KEINE120, KEINE90, KEINE60, KEINE30, SCHWARZ
 }

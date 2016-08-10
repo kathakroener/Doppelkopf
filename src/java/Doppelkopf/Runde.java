@@ -83,7 +83,6 @@ public class Runde {
             }
         }
         fuchsGefangen();
-        angesagt();
     }
     
     
@@ -112,9 +111,6 @@ public class Runde {
         }
     }
     
-    public void angesagt(){
-        
-    }
 
     
     public boolean rundeBeendet(){

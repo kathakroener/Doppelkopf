@@ -26,6 +26,12 @@ public class Karte {
                 id = t.ordinal();
             }
         }
+        for(FEHL f : FEHL.values()){
+            if(f.name().equals(karte)){
+                istTrumpf = false;
+                id = f.ordinal();
+            }
+        }
     }
     
     
