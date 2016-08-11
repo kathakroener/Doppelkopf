@@ -108,8 +108,7 @@ public class LoginServlet extends HttpServlet {
         try {
             if(loginController.checkLogin(request.getParameter("username"), request.getParameter("passwort"))){
                 session = request.getSession();
-                session.setAttribute("username", request.getParameter("username"));
-                
+                session.setAttribute("username", request.getParameter("username"));                
                 response.sendRedirect(request.getContextPath() + "/Spiel");
             }else{
                 response.addHeader("alertText", "Falscher Login");
