@@ -7,6 +7,7 @@ package Doppelkopf;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
 /**
  *
@@ -23,6 +24,53 @@ public class Runde {
     private LinkedHashMap<ArrayList<Karte>, Spieler> mapBlattSpieler;
     private int tackenRe;
     
+    
+    public boolean karteLegen(Stich stich, Karte karte, Spieler spieler){
+        ArrayList<Karte> kartenVonSpieler = null;
+        boolean spielerHatTrumpf = false;
+        
+        //Blatt des übergebenen Spielers ermitteln
+        for(Entry<ArrayList<Karte>, Spieler> kartenSpieler : mapBlattSpieler.entrySet()){
+            if(kartenSpieler.getValue().equals(spieler)){
+                kartenVonSpieler = kartenSpieler.getKey();
+            }
+        }
+        
+        //überprüfen, ob Spieler noch Trumpf auf der Hand hat
+        for(Karte trumpf : kartenVonSpieler){
+            if(trumpf.isIstTrumpf()){
+                spielerHatTrumpf = true;
+            }
+        }
+        
+        //überprüfen, ob mit ausgewählter Karte falsch bedient würde
+        if(!karte.isIstTrumpf() && spielerHatTrumpf){
+            int zaehler = 0;
+            for(Karte k : stich.getMapKarteSpieler().keySet()){
+                if(zaehler == 0){
+                    if(k.isIstTrumpf()){
+                        System.out.println("Trumpf muss bedient werden!");
+                        return false;
+                    } else if(!karte.getFarbe().equals(k.getFarbe())){
+                        System.out.println(k.getFarbe() + "muss bedient werden!");
+                        return false;
+                    }
+                }
+                zaehler++;       
+            }
+        }
+        
+        //gelegte Karte aus dem Blatt des Spielers entfernen
+        for(Entry<ArrayList<Karte>, Spieler> s : mapBlattSpieler.entrySet()){
+            if(s.getValue().equals(spieler)){
+                s.getKey().remove(karte);
+            }
+        }
+        
+        //gelegte Karte zum Stich hinzufügen
+        stich.getMapKarteSpieler().put(karte, spieler);
+        return true;
+    }
     
     public void istRe(){
         for(ArrayList<Karte> blatt : mapBlattSpieler.keySet()){
@@ -91,14 +139,19 @@ public class Runde {
         for(Stich s : stiche){
             for(Karte k : s.getMapKarteSpieler().keySet()){
                 if(k.isIstTrumpf() && k.getId() == 2){
+                    
+                    //überprüfen, ob der Stich eine höhere Karte als den Fuchs enthält
                     if(s.getHoechste().isIstTrumpf() && s.getHoechste().getId() > 2){
+                        //überprüfen, ob die höhere Karte aus dem gleichen Team kommt wie der Fuchs
                         if(re.contains(s.getStichGehoert()) && contra.contains(s.getMapKarteSpieler().get(k))){
                             tackenRe++;
                         } else if(contra.contains(s.getStichGehoert()) && re.contains(s.getMapKarteSpieler().get(k))){
                             tackenRe--;
                         }
                     }
-                    if(fuchsGefunden != null){
+                    
+                    //überprüfen, ob mit dem ersten Fuchs ein zweiter gefangen wurde
+                    if(fuchsGefunden != null && s.getHoechste().getId() == 2){
                         if(re.contains(s.getMapKarteSpieler().get(k)) && contra.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
                             tackenRe--;
                         } else if(contra.contains(s.getMapKarteSpieler().get(k)) && re.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
