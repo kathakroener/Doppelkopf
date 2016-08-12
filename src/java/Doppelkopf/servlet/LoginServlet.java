@@ -114,8 +114,10 @@ public class LoginServlet extends HttpServlet {
                 response.addHeader("alertText", "Falscher Login");
             }
         } catch (ClassNotFoundException ex) {
+            response.addHeader("alertText", "Datenbankverbindung überprüfen ;)");
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
+            response.addHeader("alertText", "Datenbankverbindung überprüfen ;)");
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         processRequest(request, response);

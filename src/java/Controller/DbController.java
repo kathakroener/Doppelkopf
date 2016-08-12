@@ -32,9 +32,9 @@ public class DbController {
     
     public Connection getConnection() throws SQLException, ClassNotFoundException{
         // create a mysql database connection
-            String myUrl = "jdbc:mysql://localhost:3306/Doppelkopf";
+            String myUrl = "jdbc:mysql://62.75.142.111:3306/Doppelkopf";
             Class.forName("com.mysql.jdbc.Driver");
-            return DriverManager.getConnection(myUrl, "root", "logentis99");
+            return DriverManager.getConnection(myUrl, "root", "43mitmilch");
     }
     
     public User getUser(String username) throws ClassNotFoundException, SQLException{

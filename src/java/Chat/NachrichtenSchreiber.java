@@ -27,9 +27,9 @@ public class NachrichtenSchreiber implements Encoder.Text<Nachricht> {
     @Override
     public String encode(Nachricht nachricht) throws EncodeException {
         return Json.createObjectBuilder()
-                .add("message", nachricht.getText())
+                .add("text", nachricht.getText())
                 .add("sender", nachricht.getSender())
-                .add("received", nachricht.getEmpfangen().toString()).build()
+                .add("empfangen", nachricht.getEmpfangen().toString()).build()
                 .toString();
     }
 }
