@@ -5,7 +5,7 @@
  */
 
 var webSocket;
-var serverURL = "ws://localhost:8080/Doppelkopf/chat";
+var serverURL = "ws://localhost:8080/Doppelkopf/websocket/chat";
 
 function sendMessage() {
     var msg = '{"text":"' + $(inputChatEingabe).val() + '", "sender":"'
@@ -25,7 +25,6 @@ function onMessageReceived(evt) {
 
 $(document).ready(function() {
     $username = $('#senderUsername').text();
-    
     webSocket = new WebSocket(serverURL);
     webSocket.onmessage = onMessageReceived;
     
