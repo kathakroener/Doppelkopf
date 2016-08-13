@@ -16,9 +16,9 @@ function sendMessage() {
 
 function onMessageReceived(evt) {
     var msg = JSON.parse(evt.data);
-    var $messageLine = $('<tr><td>' + msg.empfangen
-				+ '</td><td>' + msg.sender
-				+ '</td><td>' + msg.text
+    var $messageLine = $('<tr style=\"width:100%\"><td>' + msg.empfangen
+				+ ' </td><td> ' + msg.sender
+				+ ': </td><td> ' + msg.text
 				+ '</td></tr>');
     $('#chatVerlauf').append($messageLine);
 }
@@ -30,7 +30,7 @@ $(document).ready(function() {
     webSocket.onmessage = onMessageReceived;
     
     $('#buttonSendMessage').click(function(evt) {
-			sendMessage();
-		}); 
+        sendMessage();
+    }); 
     
 })

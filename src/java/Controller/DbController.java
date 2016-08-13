@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author hrs
+ * @author katha
  */
 public class DbController {
     
