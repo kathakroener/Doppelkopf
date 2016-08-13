@@ -38,17 +38,17 @@ public class Runde {
         
         //überprüfen, ob Spieler noch Trumpf auf der Hand hat
         for(Karte trumpf : kartenVonSpieler){
-            if(trumpf.isIstTrumpf()){
+            if(trumpf.istKarteTrumpf()){
                 spielerHatTrumpf = true;
             }
         }
         
         //überprüfen, ob mit ausgewählter Karte falsch bedient würde
-        if(!karte.isIstTrumpf() && spielerHatTrumpf){
+        if(!karte.istKarteTrumpf() && spielerHatTrumpf){
             int zaehler = 0;
             for(Karte k : stich.getMapKarteSpieler().keySet()){
                 if(zaehler == 0){
-                    if(k.isIstTrumpf()){
+                    if(k.istKarteTrumpf()){
                         System.out.println("Trumpf muss bedient werden!");
                         return false;
                     } else if(!karte.getFarbe().equals(k.getFarbe())){
@@ -75,7 +75,7 @@ public class Runde {
     public void istRe(){
         for(ArrayList<Karte> blatt : mapBlattSpieler.keySet()){
             for(Karte k : blatt){
-                if(k.isIstTrumpf() && k.getId() == 10){
+                if(k.istKarteTrumpf() && k.getId() == 10){
                     re.add(mapBlattSpieler.get(blatt));
                 }
             }
@@ -138,10 +138,10 @@ public class Runde {
         Karte fuchsGefunden = null;
         for(Stich s : stiche){
             for(Karte k : s.getMapKarteSpieler().keySet()){
-                if(k.isIstTrumpf() && k.getId() == 2){
+                if(k.istKarteTrumpf() && k.getId() == 2){
                     
                     //überprüfen, ob der Stich eine höhere Karte als den Fuchs enthält
-                    if(s.getHoechste().isIstTrumpf() && s.getHoechste().getId() > 2){
+                    if(s.getHoechste().istKarteTrumpf() && s.getHoechste().getId() > 2){
                         //überprüfen, ob die höhere Karte aus dem gleichen Team kommt wie der Fuchs
                         if(re.contains(s.getStichGehoert()) && contra.contains(s.getMapKarteSpieler().get(k))){
                             tackenRe++;

@@ -12,36 +12,35 @@ package Doppelkopf;
 public class Karte {
     private int id;
     private FARBE farbe;
-    private boolean istTrumpf;
     private int wert;
     private String bildpfad;
     private BILD bild;
     
-    public void istKarteTrumpf(){
+    public boolean istKarteTrumpf(){
         String karte = farbe.name() + bild.name();
         System.out.println(karte);
         for(TRUMPF t : TRUMPF.values()){
             if(t.name().equals(karte)){
-                istTrumpf = true;
                 id = t.ordinal();
+                return true;
             }
         }
         for(FEHL f : FEHL.values()){
             if(f.name().equals(karte)){
-                istTrumpf = false;
                 id = f.ordinal();
+                return false;
             }
         }
+        return false;
     }
     
     
     
     
     
-    public Karte(int id, FARBE farbe, boolean istTrumpf, int wert, String bildpfad, BILD bild) {
+    public Karte(int id, FARBE farbe, int wert, String bildpfad, BILD bild) {
         this.id = id;
         this.farbe = farbe;
-        this.istTrumpf = istTrumpf;
         this.wert = wert;
         this.bildpfad = bildpfad;
         this.bild = bild;
@@ -65,14 +64,6 @@ public class Karte {
 
     public void setFarbe(FARBE farbe) {
         this.farbe = farbe;
-    }
-
-    public boolean isIstTrumpf() {
-        return istTrumpf;
-    }
-
-    public void setIstTrumpf(boolean istTrumpf) {
-        this.istTrumpf = istTrumpf;
     }
 
     public int getWert() {
