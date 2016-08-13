@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package spielinteraktion;
+package websocket.Model;
 
 import Doppelkopf.Karte;
 import Doppelkopf.Spieler;
@@ -12,13 +12,18 @@ import Doppelkopf.Spieler;
  *
  * @author hrs
  */
-public class KartenlegenModel {
+public class Kartelegen {
     
     Spieler spieler;
     Karte karte;
-    
-    
 
+    public Kartelegen() {
+    }
+    
+    public Kartelegen(String jsonText) {
+    
+    }
+    
     public Spieler getSpieler() {
         return spieler;
     }
@@ -34,6 +39,5 @@ public class KartenlegenModel {
     public void setKarte(Karte karte) {
         this.karte = karte;
     }
-    
     
 }
