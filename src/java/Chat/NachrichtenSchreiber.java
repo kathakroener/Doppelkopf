@@ -12,7 +12,7 @@ import javax.websocket.EndpointConfig;
 
 /**
  *
- * @author hrs
+ * @author katha
  */
 public class NachrichtenSchreiber implements Encoder.Text<Nachricht> {
 
@@ -29,7 +29,7 @@ public class NachrichtenSchreiber implements Encoder.Text<Nachricht> {
         return Json.createObjectBuilder()
                 .add("text", nachricht.getText())
                 .add("sender", nachricht.getSender())
-                .add("empfangen", nachricht.getEmpfangen().toString()).build()
+                .add("empfangen", nachricht.getFormatEmpfangen()).build()
                 .toString();
     }
 }

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author hrs
+ * @author katha
  */
 @WebServlet(name = "SpielServlet", urlPatterns = {"/Spiel"})
 public class SpielServlet extends HttpServlet {
@@ -41,8 +41,11 @@ public class SpielServlet extends HttpServlet {
             out.println("<script src='js/jquery-3.1.0.js'></script>");
             out.println("<script src='js/bootstrap.js'></script>");
             out.println("<script src='js/chat.js'></script>");
-            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");
+            out.println("<script src='js/jquery-ui.js'></script>");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");        
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-theme.css\">");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/spiel.css\">");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/jquery-ui.css\">");
             out.println("<style>");
             out.println(".row.content {height: 40%}");
             out.println("</style>");
@@ -79,7 +82,7 @@ public class SpielServlet extends HttpServlet {
 "      <p><a href=\"#\">Link</a></p>\n" +
 "      <p><a href=\"#\">Link</a></p>\n" +
 "    </div>\n" +
-"    <div class=\"col-sm-6 text-left\">\n" +
+"    <div id=\"spieltisch\" class=\"col-sm-6 text-left\">\n" +
 "<div class=\"well well-lg\">\n" +
 "        <p>WELLE</p>\n" +
 "      </div>\n" +
@@ -105,24 +108,36 @@ public class SpielServlet extends HttpServlet {
 "      <p><a href=\"#\">Link</a></p>\n" +
 "      <p><a href=\"#\">Link</a></p>\n" +
 "    </div>\n" +
-"    <div class=\"col-sm-6 text-left\">\n" +
-"<div class=\"well well-lg\">\n" +
-"        <p>WELLE</p>\n" +
-"      </div>\n" +
-"<div class=\"well well-lg\">\n" +
-"        <p>WELLE</p>\n" +
-"      </div>\n" +
+"    <div class=\"col-sm-6\">\n"+
+                    "    <div id=\"spielfeldNutzer\">\n"+
+                    
+                     "<table id=\"tabelleBilderNutzer\"><tr style='height = 100%;'>"+
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "</tr></table>" +
+                    "    </div>\n" +
+
 "    </div>\n" +
-"    <div id=\"chat\" class=\"col-sm-3 \">\n" +
-"        <table id=\"chatVerlauf\" class=\"table table-bordered\"></table>\n" +                  
-"<div class=\"form-group\">\n" +
+                    
+"    <div id=\"chat\" class=\"col-sm-3 \">\n"+
+        "<div id=\"chatVerlauf\" class=\"table table-bordered\"></div>\n"+
+               
+"       <div class=\"form-group\">\n" +
 "  <input type=\"text\" class=\"form-control\" id=\"inputChatEingabe\" placeholder=\"Deine Nachricht\">\n" +
 " <button id=\"buttonSendMessage\" type=\"submit\" class=\"btn btn-default\">Send</button>\n" +
                     "</div>\n" +
-//"      </div>\n" +
-"    </div>\n" +
+
 "  </div>\n" +
-"</div>");
+"</div>"
+            );
             out.println("</body>");
             out.println("</html>");
         }

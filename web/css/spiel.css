@@ -1,0 +1,60 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 12.08.2016, 11:24:37
+    Author     : katha
+*/
+
+#chatVerlauf {
+    overflow-y: scroll;
+    resize: none;
+    height: 100px;
+    max-height: 100px; 
+}
+
+#inputChatEingabe{
+    float: left;
+    width: 75%;
+}
+
+#buttonSendMessage{
+    float: right;
+    width: 20%;
+}
+
+#senderUsername{
+    display: none;
+}
+
+#spielfeldNutzer{
+    background-color: #009900;
+    height: 100%;
+    width: 100%;
+}
+
+.karteNutzer{
+    
+}
+
+.spalteTabelleBilder{
+    width: 9%;
+    padding: 0.5%;
+    height: 100%;
+}
+
+#tabelleBilderNutzer{
+    height: 100%;
+    width: 100%;
+}
+
+img{
+    max-height: 100%;
+    max-width: 100%;
+}
+
+#spieltisch{
+    background-color: green;
+}

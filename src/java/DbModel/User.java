@@ -7,7 +7,7 @@ package DbModel;
 
 /**
  *
- * @author hrs
+ * @author katha
  */
 public class User {
     

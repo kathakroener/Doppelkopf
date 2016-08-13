@@ -15,7 +15,7 @@ import javax.websocket.EndpointConfig;
 
 /**
  *
- * @author hrs
+ * @author katha
  */
 public class NachrichtenLeser implements Decoder.Text<Nachricht> {
     
