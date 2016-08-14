@@ -35,53 +35,51 @@ public class Spiel {
     }
     
     public void listKartenFuellen(){
-        listKarten.add(new Karte(1, FARBE.KARO, 10, "/bilder/karozehn", BILD.ZEHN));
-        listKarten.add(new Karte(3, FARBE.KARO, 2, "/bilder/karobube", BILD.BUBE));
-        listKarten.add(new Karte(7, FARBE.KARO, 3, "/bilder/karodame", BILD.DAME));
-        listKarten.add(new Karte(0, FARBE.KARO, 4, "/bilder/karokoenig", BILD.KOENIG));
-        listKarten.add(new Karte(2, FARBE.KARO, 11, "/bilder/karoass", BILD.ASS));
         
         listKarten.add(new Karte(11, FARBE.HERZ, 10, "/bilder/herzzehn", BILD.ZEHN));
-        listKarten.add(new Karte(4, FARBE.HERZ, 2, "/bilder/herzbube", BILD.BUBE));
-        listKarten.add(new Karte(8, FARBE.HERZ, 3, "/bilder/herzdame", BILD.DAME));
-        listKarten.add(new Karte(0, FARBE.HERZ, 4, "/bilder/herzkoenig", BILD.KOENIG));
-        listKarten.add(new Karte(1, FARBE.HERZ, 11, "/bilder/herzass", BILD.ASS));
-        
-        listKarten.add(new Karte(3, FARBE.PIK, 10, "/bilder/pikzehn", BILD.ZEHN));
-        listKarten.add(new Karte(5, FARBE.PIK, 2, "/bilder/pikbube", BILD.BUBE));
-        listKarten.add(new Karte(9, FARBE.PIK, 3, "/bilder/pikdame", BILD.DAME));
-        listKarten.add(new Karte(2, FARBE.PIK, 4, "/bilder/pikkoenig", BILD.KOENIG));
-        listKarten.add(new Karte(4, FARBE.PIK, 11, "/bilder/pikass", BILD.ASS));
-        
-        listKarten.add(new Karte(6, FARBE.KREUZ, 10, "/bilder/kreuzzehn", BILD.ZEHN));
-        listKarten.add(new Karte(6, FARBE.KREUZ, 2, "/bilder/kreuzbube", BILD.BUBE));
-        listKarten.add(new Karte(10, FARBE.KREUZ, 3, "/bilder/kreuzdame", BILD.DAME));
-        listKarten.add(new Karte(5, FARBE.KREUZ, 4, "/bilder/kreuzkoenig", BILD.KOENIG));
-        listKarten.add(new Karte(7, FARBE.KREUZ, 11, "/bilder/kreuzass", BILD.ASS));
-        
-        listKarten.add(new Karte(1, FARBE.KARO, 10, "/bilder/karozehn", BILD.ZEHN));
-        listKarten.add(new Karte(3, FARBE.KARO, 2, "/bilder/karobube", BILD.BUBE));
-        listKarten.add(new Karte(7, FARBE.KARO, 3, "/bilder/karodame", BILD.DAME));
-        listKarten.add(new Karte(0, FARBE.KARO, 4, "/bilder/karokoenig", BILD.KOENIG));
-        listKarten.add(new Karte(2, FARBE.KARO, 11, "/bilder/karoass", BILD.ASS));
-        
         listKarten.add(new Karte(11, FARBE.HERZ, 10, "/bilder/herzzehn", BILD.ZEHN));
-        listKarten.add(new Karte(4, FARBE.HERZ, 2, "/bilder/herzbube", BILD.BUBE));
-        listKarten.add(new Karte(8, FARBE.HERZ, 3, "/bilder/herzdame", BILD.DAME));
-        listKarten.add(new Karte(0, FARBE.HERZ, 4, "/bilder/herzkoenig", BILD.KOENIG));
-        listKarten.add(new Karte(1, FARBE.HERZ, 11, "/bilder/herzass", BILD.ASS));
         
-        listKarten.add(new Karte(3, FARBE.PIK, 10, "/bilder/pikzehn", BILD.ZEHN));
-        listKarten.add(new Karte(5, FARBE.PIK, 2, "/bilder/pikbube", BILD.BUBE));
-        listKarten.add(new Karte(9, FARBE.PIK, 3, "/bilder/pikdame", BILD.DAME));
-        listKarten.add(new Karte(2, FARBE.PIK, 4, "/bilder/pikkoenig", BILD.KOENIG));
-        listKarten.add(new Karte(4, FARBE.PIK, 11, "/bilder/pikass", BILD.ASS));
-        
-        listKarten.add(new Karte(6, FARBE.KREUZ, 10, "/bilder/kreuzzehn", BILD.ZEHN));
-        listKarten.add(new Karte(6, FARBE.KREUZ, 2, "/bilder/kreuzbube", BILD.BUBE));
         listKarten.add(new Karte(10, FARBE.KREUZ, 3, "/bilder/kreuzdame", BILD.DAME));
-        listKarten.add(new Karte(5, FARBE.KREUZ, 4, "/bilder/kreuzkoenig", BILD.KOENIG));
+        listKarten.add(new Karte(10, FARBE.KREUZ, 3, "/bilder/kreuzdame", BILD.DAME));
+        listKarten.add(new Karte(9, FARBE.PIK, 3, "/bilder/pikdame", BILD.DAME));
+        listKarten.add(new Karte(9, FARBE.PIK, 3, "/bilder/pikdame", BILD.DAME));
+        listKarten.add(new Karte(8, FARBE.HERZ, 3, "/bilder/herzdame", BILD.DAME));
+        listKarten.add(new Karte(8, FARBE.HERZ, 3, "/bilder/herzdame", BILD.DAME));
+        listKarten.add(new Karte(7, FARBE.KARO, 3, "/bilder/karodame", BILD.DAME));
+        listKarten.add(new Karte(7, FARBE.KARO, 3, "/bilder/karodame", BILD.DAME));
+        
+        listKarten.add(new Karte(6, FARBE.KREUZ, 2, "/bilder/kreuzbube", BILD.BUBE));
+        listKarten.add(new Karte(6, FARBE.KREUZ, 2, "/bilder/kreuzbube", BILD.BUBE));
+        listKarten.add(new Karte(5, FARBE.PIK, 2, "/bilder/pikbube", BILD.BUBE));
+        listKarten.add(new Karte(5, FARBE.PIK, 2, "/bilder/pikbube", BILD.BUBE));
+        listKarten.add(new Karte(4, FARBE.HERZ, 2, "/bilder/herzbube", BILD.BUBE));
+        listKarten.add(new Karte(4, FARBE.HERZ, 2, "/bilder/herzbube", BILD.BUBE));
+        listKarten.add(new Karte(3, FARBE.KARO, 2, "/bilder/karobube", BILD.BUBE));
+        listKarten.add(new Karte(3, FARBE.KARO, 2, "/bilder/karobube", BILD.BUBE));
+        
+        listKarten.add(new Karte(2, FARBE.KARO, 11, "/bilder/karoass", BILD.ASS));
+        listKarten.add(new Karte(2, FARBE.KARO, 11, "/bilder/karoass", BILD.ASS));
+        listKarten.add(new Karte(1, FARBE.KARO, 10, "/bilder/karozehn", BILD.ZEHN));
+        listKarten.add(new Karte(1, FARBE.KARO, 10, "/bilder/karozehn", BILD.ZEHN));
+        listKarten.add(new Karte(0, FARBE.KARO, 4, "/bilder/karokoenig", BILD.KOENIG));
+        listKarten.add(new Karte(0, FARBE.KARO, 4, "/bilder/karokoenig", BILD.KOENIG));
+        
         listKarten.add(new Karte(7, FARBE.KREUZ, 11, "/bilder/kreuzass", BILD.ASS));
+        listKarten.add(new Karte(7, FARBE.KREUZ, 11, "/bilder/kreuzass", BILD.ASS));
+        listKarten.add(new Karte(6, FARBE.KREUZ, 10, "/bilder/kreuzzehn", BILD.ZEHN));
+        listKarten.add(new Karte(6, FARBE.KREUZ, 10, "/bilder/kreuzzehn", BILD.ZEHN));
+        listKarten.add(new Karte(5, FARBE.KREUZ, 4, "/bilder/kreuzkoenig", BILD.KOENIG));
+        listKarten.add(new Karte(5, FARBE.KREUZ, 4, "/bilder/kreuzkoenig", BILD.KOENIG));
+        listKarten.add(new Karte(4, FARBE.PIK, 11, "/bilder/pikass", BILD.ASS));
+        listKarten.add(new Karte(4, FARBE.PIK, 11, "/bilder/pikass", BILD.ASS));
+        listKarten.add(new Karte(3, FARBE.PIK, 10, "/bilder/pikzehn", BILD.ZEHN));
+        listKarten.add(new Karte(3, FARBE.PIK, 10, "/bilder/pikzehn", BILD.ZEHN));
+        listKarten.add(new Karte(2, FARBE.PIK, 4, "/bilder/pikkoenig", BILD.KOENIG));
+        listKarten.add(new Karte(2, FARBE.PIK, 4, "/bilder/pikkoenig", BILD.KOENIG));
+        listKarten.add(new Karte(1, FARBE.HERZ, 11, "/bilder/herzass", BILD.ASS));
+        listKarten.add(new Karte(1, FARBE.HERZ, 11, "/bilder/herzass", BILD.ASS));
+        listKarten.add(new Karte(0, FARBE.HERZ, 4, "/bilder/herzkoenig", BILD.KOENIG));
+        listKarten.add(new Karte(0, FARBE.HERZ, 4, "/bilder/herzkoenig", BILD.KOENIG));
     }
     
     public void auswertung(){
