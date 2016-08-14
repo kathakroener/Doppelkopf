@@ -5,6 +5,7 @@
  */
 package Doppelkopf.servlet;
 
+import Doppelkopf.Spielverwaltung;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import websocket.Model.Spielerverwaltung;
 
 /**
  *
@@ -20,6 +22,11 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "SpielServlet", urlPatterns = {"/Spiel"})
 public class SpielServlet extends HttpServlet {
+    
+    String spielerLinks = "offline";
+    String spielerOben = "offline";
+    String spielerRechts = "offline";
+    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,7 +39,9 @@ public class SpielServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
+        platzZuordnung((Integer) session.getAttribute("platz")); 
         try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -41,6 +50,7 @@ public class SpielServlet extends HttpServlet {
             out.println("<script src='js/jquery-3.1.0.js'></script>");
             out.println("<script src='js/bootstrap.js'></script>");
             out.println("<script src='js/chat.js'></script>");
+            out.println("<script src='js/spielerverwaltung.js'></script>");
             out.println("<script src='js/jquery-ui.js'></script>");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");        
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-theme.css\">");
@@ -51,26 +61,25 @@ public class SpielServlet extends HttpServlet {
             out.println("</style>");
             out.println("</head>");
             out.println("<body>");
-            HttpSession session = request.getSession();
+            
             
             out.println("<label id=\"senderUsername\">" + session.getAttribute("username") + "</label>");
+            out.println("<label id=\"eigenerPlatz\">" + session.getAttribute("platz") + "</label>");
             out.println("<div class=\"container-fluid text-center\" style=\"height=20%;\">\n" +
 "  <div class=\"row content\">\n" +
 "    <div class=\"col-sm-3 sidenav\" style=\"background-color:blue;height:100%\">\n" +
 
 "    </div>\n" +
 "    <div class=\"col-sm-6 text-left\">\n" +
-"<div class=\"well well-lg\">\n" +
-"        <p>WELLE</p>\n" +
+                    "      <div class=\"well well-lg\">\n" +
+                    
+"        <p id=\"pSpielerOben\" style=\"text-align='center';\">" + this.spielerOben + "</p>\n" +
+                    
 "      </div>\n" +
-"<div class=\"well well-lg\">\n" +
-"        <p>WELLE</p>\n" +
-"      </div>\n" +
+
 "    </div>\n" +
 "    <div class=\"col-sm-3 sidenav\">\n" +
-"      <div class=\"well well-lg\">\n" +
-"        <p style=\"text-align='center';\">WELLE</p>\n" +
-"      </div>\n" +
+
 "    </div>\n" +
 "  </div>\n" +
 "</div>\n" +
@@ -78,24 +87,22 @@ public class SpielServlet extends HttpServlet {
 "<div class=\"container-fluid text-center\">\n" +
 "  <div class=\"row content\">\n" +
 "    <div class=\"col-sm-3 sidenav\">\n" +
-"      <p><a href=\"#\">Link</a></p>\n" +
-"      <p><a href=\"#\">Link</a></p>\n" +
-"      <p><a href=\"#\">Link</a></p>\n" +
+"      <div class=\"well well-lg\">\n" +
+"        <p id=\"pSpielerLinks\" style=\"text-align='center';\">" + this.spielerLinks + "</p>\n" +
+"      </div>\n" +
 "    </div>\n" +
-"    <div id=\"spieltisch\" class=\"col-sm-6 text-left\">\n" +
-"<div class=\"well well-lg\">\n" +
-"        <p>WELLE</p>\n" +
-"      </div>\n" +
-"<div class=\"well well-lg\">\n" +
-"        <p>WELLE</p>\n" +
-"      </div>\n" +
+"    <div id=\"spieltisch\" class=\"col-sm-6 text-left\">\n" + 
+                    "<div id=\"divKarteOben\"> <img id=\"imgKarteOben\" src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></div> "+ 
+                    "<div style=\"padding-bottom: 15%;\">\n" +
+                    "<div id=\"divKarteLinks\"> <img id=\"imgKarteLinks\" src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></div> "+ 
+                    "<div id=\"divKarteRechts\"><img id=\"imgKarteRechts\" src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"> </div> "+ 
+                    "</div></br>\n" +
+                    "<div id=\"divKarteUnten\"> <img id=\"imgKarteUnten\" src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></div> "+ 
+
 "    </div>\n" +
 "    <div class=\"col-sm-3 sidenav\">\n" +
 "      <div class=\"well well-lg\">\n" +
-"        <p style=\"text-align='center';\">WELLE</p>\n" +
-"      </div>\n" +
-"      <div class=\"well\">\n" +
-"        <p>ADS</p>\n" +
+"        <p id=\"pSpielerRechts\" style=\"text-align='center';\">" + this.spielerRechts + "</p>\n" +
 "      </div>\n" +
 "    </div>\n" +
 "  </div>\n" +
@@ -104,9 +111,6 @@ public class SpielServlet extends HttpServlet {
 "<div class=\"container-fluid text-center\">\n" +
 "  <div class=\"row content\">\n" +
 "    <div class=\"col-sm-3 sidenav\">\n" +
-"      <p><a href=\"#\">Link</a></p>\n" +
-"      <p><a href=\"#\">Link</a></p>\n" +
-"      <p><a href=\"#\">Link</a></p>\n" +
 "    </div>\n" +
 "    <div class=\"col-sm-6\">\n"+
                     "    <div id=\"spielfeldNutzer\">\n"+
@@ -155,7 +159,14 @@ public class SpielServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // ToDo: SpielerUpdate senden!!!
+        
+        if(request.getSession().getAttribute("username") == null){
+            response.addHeader("alertText", "Sie sind nicht eingeloggt");
+            response.sendRedirect(request.getContextPath() + "/Login");
+        }else{
+            processRequest(request, response);
+        }
     }
 
     /**
@@ -170,6 +181,78 @@ public class SpielServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+    }
+    
+    
+    public void platzZuordnung(int platz){
+        if(platz == 0){
+            if(Spielverwaltung.getInstance().getSpielerPlatz1()!=null){
+                this.spielerLinks = Spielverwaltung.getInstance().getSpielerPlatz1().getName();
+            }else{
+                this.spielerLinks = "offline";
+            }
+            if(Spielverwaltung.getInstance().getSpielerPlatz2()!=null){
+                this.spielerOben = Spielverwaltung.getInstance().getSpielerPlatz2().getName();
+            }else{
+                this.spielerOben = "offline";
+            }
+            if(Spielverwaltung.getInstance().getSpielerPlatz3()!=null){
+                this.spielerRechts = Spielverwaltung.getInstance().getSpielerPlatz3().getName();
+            }else{
+                this.spielerRechts = "offline";
+            }
+        }
+        if(platz == 1){
+            if(Spielverwaltung.getInstance().getSpielerPlatz2()!=null){
+                this.spielerLinks = Spielverwaltung.getInstance().getSpielerPlatz2().getName();
+            }else{
+                this.spielerLinks = "offline";
+            }
+            if(Spielverwaltung.getInstance().getSpielerPlatz3()!=null){
+                this.spielerOben = Spielverwaltung.getInstance().getSpielerPlatz3().getName();
+            }else{
+                this.spielerOben = "offline";
+            }
+            if(Spielverwaltung.getInstance().getSpielerPlatz0()!=null){
+                this.spielerRechts = Spielverwaltung.getInstance().getSpielerPlatz0().getName();
+            }else{
+                this.spielerRechts = "offline";
+            }
+        }
+        if(platz == 2){
+            if(Spielverwaltung.getInstance().getSpielerPlatz3()!=null){
+                this.spielerLinks = Spielverwaltung.getInstance().getSpielerPlatz3().getName();
+            }else{
+                this.spielerLinks = "offline";
+            }
+            if(Spielverwaltung.getInstance().getSpielerPlatz0()!=null){
+                this.spielerOben = Spielverwaltung.getInstance().getSpielerPlatz0().getName();
+            }else{
+                this.spielerOben = "offline";
+            }
+            if(Spielverwaltung.getInstance().getSpielerPlatz1()!=null){
+                this.spielerRechts = Spielverwaltung.getInstance().getSpielerPlatz1().getName();
+            }else{
+                this.spielerRechts = "offline";
+            }
+        }
+        if(platz == 3){
+            if(Spielverwaltung.getInstance().getSpielerPlatz0()!=null){
+                this.spielerLinks = Spielverwaltung.getInstance().getSpielerPlatz0().getName();
+            }else{
+                this.spielerLinks = "offline";
+            }
+            if(Spielverwaltung.getInstance().getSpielerPlatz1()!=null){
+                this.spielerOben = Spielverwaltung.getInstance().getSpielerPlatz1().getName();
+            }else{
+                this.spielerOben = "offline";
+            }
+            if(Spielverwaltung.getInstance().getSpielerPlatz2()!=null){
+                this.spielerRechts = Spielverwaltung.getInstance().getSpielerPlatz2().getName();
+            }else{
+                this.spielerRechts = "offline";
+            }
+        }
     }
 
     /**

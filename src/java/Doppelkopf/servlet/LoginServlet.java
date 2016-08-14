@@ -5,7 +5,10 @@
  */
 package Doppelkopf.servlet;
 
+import Controller.DbController;
 import Controller.LoginController;
+import DbModel.User;
+import Doppelkopf.Spielverwaltung;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -108,15 +111,19 @@ public class LoginServlet extends HttpServlet {
         try {
             if(loginController.checkLogin(request.getParameter("username"), request.getParameter("passwort"))){
                 session = request.getSession();
-                session.setAttribute("username", request.getParameter("username"));                
-                response.sendRedirect(request.getContextPath() + "/Spiel");
+                User user = DbController.getInstance().getUser(request.getParameter("username"));
+                int platz = Spielverwaltung.getInstance().doLogin(user);
+                if(platz > -1){
+                    session.setAttribute("username", request.getParameter("username"));
+                    session.setAttribute("platz", platz);
+                    response.sendRedirect(request.getContextPath() + "/Spiel");
+                }else{
+                    response.addHeader("alertText", "Leider sind schon vier Spieler eingeloggt");
+                }
             }else{
                 response.addHeader("alertText", "Falscher Login");
             }
-        } catch (ClassNotFoundException ex) {
-            response.addHeader("alertText", "Datenbankverbindung überprüfen ;)");
-            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             response.addHeader("alertText", "Datenbankverbindung überprüfen ;)");
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -4,17 +4,17 @@
  * and open the template in the editor.
  */
 
-var webSocket;
-var serverURL = "ws://localhost:8080/Doppelkopf/websocket/chat";
+var webSocketChat;
+var serverURLChat = "ws://" + window.location.hostname + ":8080/Doppelkopf/websocket/chat";
 
 function sendMessage() {
     var msg = '{"text":"' + $(inputChatEingabe).val() + '", "sender":"'
                 + $username + '", "received":""}';
-    webSocket.send(msg);
+    webSocketChat.send(msg);
     $(inputChatEingabe).val('').focus();
 }
 
-function onMessageReceived(evt) {
+function onChatMessageReceived(evt) {
     var msg = JSON.parse(evt.data);
     var $messageLine = $('<tr style=\"width:100%\"><td>' + msg.empfangen
 				+ ' </td><td> ' + msg.sender
@@ -25,8 +25,8 @@ function onMessageReceived(evt) {
 
 $(document).ready(function() {
     $username = $('#senderUsername').text();
-    webSocket = new WebSocket(serverURL);
-    webSocket.onmessage = onMessageReceived;
+    webSocketChat = new WebSocket(serverURLChat);
+    webSocketChat.onmessage = onChatMessageReceived;
     
     $('#buttonSendMessage').click(function(evt) {
         sendMessage();

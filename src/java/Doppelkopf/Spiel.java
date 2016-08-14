@@ -5,7 +5,9 @@
  */
 package Doppelkopf;
 
+import DbModel.User;
 import java.util.ArrayList;
+import websocket.WebSocketEndpoint;
 
 /**
  *
@@ -16,6 +18,21 @@ public class Spiel {
     private ArrayList<Spieler> listSpieler;
     private ArrayList<Karte> listKarten;
     private int zaehler = 0;
+
+    public Spiel(ArrayList<Spieler> teilnehmendeSpieler) {
+        listRunden = new ArrayList();
+        listSpieler = teilnehmendeSpieler;
+        kartenGeben();
+    }
+    
+    public int getPlatz(User user){
+        for(int i = 0; i < 4; i++){
+            if(listSpieler.get(i).getName().equals(user.getUsername())){
+                return i;
+            }
+        }
+        return -1;
+    }
     
     public void listKartenFuellen(){
         listKarten.add(new Karte(1, FARBE.KARO, 10, "/bilder/karozehn", BILD.ZEHN));
@@ -71,40 +88,62 @@ public class Spiel {
         
     }
     
-    public void spielBeginnen(){
-        if(listSpieler.size() == 4){
-            
-        }
-    }
-    
     public void kartenGeben(){
-        Runde r = new Runde();
-        ArrayList<Karte> spieler1 = new ArrayList<>();
-        ArrayList<Karte> spieler2 = new ArrayList<>();
-        ArrayList<Karte> spieler3 = new ArrayList<>();
-        ArrayList<Karte> spieler0 = new ArrayList<>();
+        Runde runde = new Runde();
+        ArrayList<Karte> kartenSpieler0 = new ArrayList<>();
+        ArrayList<Karte> kartenSpieler1 = new ArrayList<>();
+        ArrayList<Karte> kartenSpieler2 = new ArrayList<>();
+        ArrayList<Karte> kartenSpieler3 = new ArrayList<>();
+        
         int spielerNr = -1;
         Spieler kommtRaus = listSpieler.get(zaehler);
-        r.setKommtRaus(kommtRaus);
+        runde.setKommtRaus(kommtRaus);
         if(zaehler == 3){
             zaehler = 0;
         } else{
             zaehler++;
         }
+        
         for(int i = 39; i >=0; i--){
             spielerNr = (int)(Math.random() * 4);
             Spieler bekommtKarte = listSpieler.get(spielerNr);
             switch(spielerNr){
-                case 0: spieler0.add(listKarten.get(i));
-                case 1: spieler1.add(listKarten.get(i));
-                case 2: spieler2.add(listKarten.get(i));
-                case 3: spieler3.add(listKarten.get(i));
-            }
-            listKarten.remove(i);
+                case 0:
+                    if(kartenSpieler0.size() < 10){
+                        kartenSpieler0.add(listKarten.get(i));
+                        listKarten.remove(i);
+                    }else{
+                        i++;
+                    }
+                case 1: 
+                    if(kartenSpieler1.size() < 10){
+                        kartenSpieler1.add(listKarten.get(i));
+                        listKarten.remove(i);
+                    }else{
+                        i++;
+                    }
+                case 2: 
+                    if(kartenSpieler2.size() < 10){
+                        kartenSpieler2.add(listKarten.get(i));
+                        listKarten.remove(i);
+                    }else{
+                        i++;
+                    }
+                case 3: 
+                    if(kartenSpieler3.size() < 10){
+                        kartenSpieler3.add(listKarten.get(i));
+                        listKarten.remove(i);
+                    }else{
+                        i++;
+                    }
+            } 
         }
-        r.getMapBlattSpieler().put(spieler0, listSpieler.get(0));
-        r.getMapBlattSpieler().put(spieler1, listSpieler.get(1));
-        r.getMapBlattSpieler().put(spieler2, listSpieler.get(2));
-        r.getMapBlattSpieler().put(spieler3, listSpieler.get(3));
+        
+        runde.getMapBlattSpieler().put(kartenSpieler0, listSpieler.get(0));
+        runde.getMapBlattSpieler().put(kartenSpieler1, listSpieler.get(1));
+        runde.getMapBlattSpieler().put(kartenSpieler2, listSpieler.get(2));
+        runde.getMapBlattSpieler().put(kartenSpieler3, listSpieler.get(3));
+        
+        WebSocketEndpoint.getInstance().verteileKarten(runde);
     }
 }
