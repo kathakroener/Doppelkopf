@@ -19,12 +19,14 @@ public class WebSocketVerwaltung {
     Set<Session> spielSetSession;
     Set<Session> ansageSetSession;
     Set<Session> kartelegenSetSession;
+    Set<Session> kartenVerteilenSetSession;
     
     private WebSocketVerwaltung() {
         this.chatSetSession = new HashSet<Session>();
         this.spielSetSession = new HashSet<Session>();
         this.ansageSetSession = new HashSet<Session>();
         this.kartelegenSetSession = new HashSet<Session>();
+        this.kartenVerteilenSetSession = new HashSet<Session>();
     }
     
     public static WebSocketVerwaltung getInstance() {
@@ -67,6 +69,12 @@ public class WebSocketVerwaltung {
     public void setKartelegenSetSession(Set<Session> kartelegenSetSession) {
         this.kartelegenSetSession = kartelegenSetSession;
     }
-    
-    
+
+    public Set<Session> getKartenVerteilenSetSession() {
+        return kartenVerteilenSetSession;
+    }
+
+    public void setKartenVerteilenSetSession(Set<Session> kartenVerteilenSetSession) {
+        this.kartenVerteilenSetSession = kartenVerteilenSetSession;
+    }   
 }

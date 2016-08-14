@@ -51,6 +51,8 @@ public class SpielServlet extends HttpServlet {
             out.println("<script src='js/bootstrap.js'></script>");
             out.println("<script src='js/chat.js'></script>");
             out.println("<script src='js/spielerverwaltung.js'></script>");
+            out.println("<script src='js/kartenVerteilen.js'></script>");
+            out.println("<script src='js/spiel.js'></script>");
             out.println("<script src='js/jquery-ui.js'></script>");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");        
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-theme.css\">");
@@ -92,12 +94,12 @@ public class SpielServlet extends HttpServlet {
 "      </div>\n" +
 "    </div>\n" +
 "    <div id=\"spieltisch\" class=\"col-sm-6 text-left\">\n" + 
-                    "<div id=\"divKarteOben\"> <img id=\"imgKarteOben\" src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></div> "+ 
+                    "<div id=\"divKarteOben\"> <img id=\"imgKarteOben\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></div> "+ 
                     "<div style=\"padding-bottom: 15%;\">\n" +
-                    "<div id=\"divKarteLinks\"> <img id=\"imgKarteLinks\" src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></div> "+ 
-                    "<div id=\"divKarteRechts\"><img id=\"imgKarteRechts\" src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"> </div> "+ 
+                    "<div id=\"divKarteLinks\"> <img id=\"imgKarteLinks\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></div> "+ 
+                    "<div id=\"divKarteRechts\"><img id=\"imgKarteRechts\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"> </div> "+ 
                     "</div></br>\n" +
-                    "<div id=\"divKarteUnten\"> <img id=\"imgKarteUnten\" src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></div> "+ 
+                    "<div id=\"divKarteUnten\"> <img id=\"imgKarteUnten\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></div> "+ 
 
 "    </div>\n" +
 "    <div class=\"col-sm-3 sidenav\">\n" +
@@ -116,16 +118,16 @@ public class SpielServlet extends HttpServlet {
                     "    <div id=\"spielfeldNutzer\">\n"+
                     
                      "<table id=\"tabelleBilderNutzer\"><tr style='height = 100%;'>"+
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
-                    "<td class=\"spalteTabelleBilder\"><img src=\"bilder/karozehn.jpg\" class=\"img-rounded karteNutzer\"></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte9\" href=\"#\"><img id=\"eigeneKarte9\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte8\" href=\"#\"><img id=\"eigeneKarte8\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte7\" href=\"#\"><img id=\"eigeneKarte7\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte6\" href=\"#\"><img id=\"eigeneKarte6\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte5\" href=\"#\"><img id=\"eigeneKarte5\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte4\" href=\"#\"><img id=\"eigeneKarte4\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte3\" href=\"#\"><img id=\"eigeneKarte3\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte2\" href=\"#\"><img id=\"eigeneKarte2\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte1\" href=\"#\"><img id=\"eigeneKarte1\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
+                    "<td class=\"spalteTabelleBilder\"><a id=\"linkEigeneKarte0\" href=\"#\"><img id=\"eigeneKarte0\" src=\"bilder/rahmen.jpg\" class=\"img-rounded karteNutzer\"></a></td>" +
                     "</tr></table>" +
                     "    </div>\n" +
 

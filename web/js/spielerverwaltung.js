@@ -19,28 +19,37 @@ function serverUpdateSpieler(event) {
 
 $(document).ready(function() {
     $username = $('#senderUsername').text();
-    $platz = $('#eigenerPlatz').text();
+    eigenerPlatz = $('#eigenerPlatz').text();
     webSocketSpielerverwaltung = new WebSocket(serverURLSpielerverwaltung);
-    webSocketSpielerverwaltung.onmessage = serverUpdateSpieler;    
+    webSocketSpielerverwaltung.onmessage = serverUpdateSpieler; 
+    if($("#pSpielerOben").text() != "offline"){
+        spielerOben = $("#pSpielerOben").text();
+    }
+    if($("#pSpielerLinks").text() != "offline"){
+        spielerLinks = $("#pSpielerLinks").text();
+    }
+    if($("#pSpielerRechts").text() != "offline"){
+        spielerRechts = $("#pSpielerRechts").text();
+    }
 })
 
 function spielerUpdate(spieler0, spieler1, spieler2, spieler3){
-    if($platz==0){
+    if(eigenerPlatz==0){
         spielerLinks = spieler1;
         spielerOben = spieler2;
         spielerRechts = spieler3;
     }
-    if($platz==1){
+    if(eigenerPlatz==1){
         spielerLinks = spieler2;
         spielerOben = spieler3;
         spielerRechts = spieler0;
     }
-    if($platz==2){
+    if(eigenerPlatz==2){
         spielerLinks = spieler3;
         spielerOben = spieler0;
         spielerRechts = spieler1;
     }
-    if($platz==3){
+    if(eigenerPlatz==3){
         spielerLinks = spieler0;
         spielerOben = spieler1;
         spielerRechts = spieler2;

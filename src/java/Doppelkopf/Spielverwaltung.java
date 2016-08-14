@@ -16,9 +16,10 @@ import websocket.WebSocketEndpoint;
 
 /**
  *
- * @author hrs
+ * @author katha
  */
 public class Spielverwaltung {
+    public int anzSpielerBereit = 0;
     Spiel aktSpiel;
     Spieler spielerPlatz0;
     Spieler spielerPlatz1;

@@ -61,14 +61,14 @@ public class WebSocketEndpoint{
         
         if(aufgabenTyp.equals("kartelegen")){
             WebSocketVerwaltung.getInstance().kartelegenSetSession.add(session);
-            
+        }
+        
+        if(aufgabenTyp.equals("kartenverteilen")){
+            WebSocketVerwaltung.getInstance().kartenVerteilenSetSession.add(session);
         }
 
         if(aufgabenTyp.equals("spielerverwaltung")){
             WebSocketVerwaltung.getInstance().spielSetSession.add(session);
-            if(WebSocketVerwaltung.getInstance().spielSetSession.size() == 4){
-                Spielverwaltung.getInstance().starteNeuesSpiel();
-            }
         }
         
     }
@@ -89,7 +89,34 @@ public class WebSocketEndpoint{
             }
         }
         if(aufgabenTyp.equals("kartelegen")){
-            Kartelegen kartenlegen = new Kartelegen(text);
+            try {
+                String urlPfad = session.getRequestURI().getPath();
+                for (Session s : session.getOpenSessions()) {
+                    if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
+                        s.getBasicRemote().sendObject(text);
+                    }
+                }
+            } catch (IOException | EncodeException e) {
+                System.out.println("Error " + e.getMessage());
+            }
+        }
+        if(aufgabenTyp.equals("kartenverteilen")){
+            Spielverwaltung.getInstance().anzSpielerBereit++;
+            if(Spielverwaltung.getInstance().anzSpielerBereit == 4){
+                Spielverwaltung.getInstance().starteNeuesSpiel();
+                Spielverwaltung.getInstance().anzSpielerBereit = 0;
+                Runde runde = Spielverwaltung.getInstance().getAktSpiel().kartenGeben();
+                try {
+                    String urlPfad = session.getRequestURI().getPath();
+                    for (Session s : session.getOpenSessions()) {
+                        if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
+                            s.getBasicRemote().sendObject(runde.blattToJSON());
+                        }
+                    }
+                } catch (IOException | EncodeException e) {
+                    System.out.println("Error " + e.getMessage());
+                }
+            }
         }
         if(aufgabenTyp.equals("ansage")){
             Kartelegen kartenlegen = new Kartelegen(text);
@@ -100,8 +127,12 @@ public class WebSocketEndpoint{
         
     }   
     
-    public void verteileKarten(Runde runde){
-        
+    public void verteileKarten(Runde runde, Set<Session> sessions) throws IOException, EncodeException{
+        for (Session s : sessions) {
+            if (s.isOpen()) {
+                s.getBasicRemote().sendObject(runde.blattToJSON());
+            }
+        }
     }
     
     public void neuerSpieler(){

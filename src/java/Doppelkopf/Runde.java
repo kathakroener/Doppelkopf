@@ -7,7 +7,11 @@ package Doppelkopf;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
 /**
  *
@@ -21,20 +25,25 @@ public class Runde {
     private Spieler kommtRaus;
     private ArrayList<Spieler> re;
     private ArrayList<Spieler> contra;
-    private LinkedHashMap<ArrayList<Karte>, Spieler> mapBlattSpieler;
+    private LinkedHashMap<Spieler, ArrayList<Karte>> mapBlattSpieler;
     private int tackenRe;
-    
-    
-    public boolean karteLegen(Stich stich, Karte karte, Spieler spieler){
+
+    public Runde(Spieler kommtRaus) {
+        mapBlattSpieler = new LinkedHashMap<Spieler, ArrayList<Karte>>();
+        mapAnsagenSpieler = new LinkedHashMap<ANSAGEN, Spieler>();
+        re = new ArrayList<Spieler>();
+        contra = new ArrayList<Spieler>();
+        stiche = new ArrayList<Stich>();
+        this.kommtRaus = kommtRaus;
+    }
+
+    public boolean karteLegen(Stich stich, Karte gespielteKarte, Spieler spieler){
         ArrayList<Karte> kartenVonSpieler = null;
         boolean spielerHatTrumpf = false;
         
-        //Blatt des übergebenen Spielers ermitteln
-        for(Entry<ArrayList<Karte>, Spieler> kartenSpieler : mapBlattSpieler.entrySet()){
-            if(kartenSpieler.getValue().equals(spieler)){
-                kartenVonSpieler = kartenSpieler.getKey();
-            }
-        }
+        //Blatt des übergebenen Spielers ermitteln        
+        kartenVonSpieler = mapBlattSpieler.get(spieler);
+        
         
         //überprüfen, ob Spieler noch Trumpf auf der Hand hat
         for(Karte trumpf : kartenVonSpieler){
@@ -44,14 +53,14 @@ public class Runde {
         }
         
         //überprüfen, ob mit ausgewählter Karte falsch bedient würde
-        if(!karte.istKarteTrumpf() && spielerHatTrumpf){
+        if(!gespielteKarte.istKarteTrumpf() && spielerHatTrumpf){
             int zaehler = 0;
             for(Karte k : stich.getMapKarteSpieler().keySet()){
                 if(zaehler == 0){
                     if(k.istKarteTrumpf()){
                         System.out.println("Trumpf muss bedient werden!");
                         return false;
-                    } else if(!karte.getFarbe().equals(k.getFarbe())){
+                    } else if(!gespielteKarte.getFarbe().equals(k.getFarbe())){
                         System.out.println(k.getFarbe() + "muss bedient werden!");
                         return false;
                     }
@@ -60,35 +69,27 @@ public class Runde {
             }
         }
         
-        //gelegte Karte aus dem Blatt des Spielers entfernen
-        for(Entry<ArrayList<Karte>, Spieler> s : mapBlattSpieler.entrySet()){
-            if(s.getValue().equals(spieler)){
-                s.getKey().remove(karte);
-            }
-        }
+        //gelegte Karte aus dem Blatt des Spielers entfernen    
+        kartenVonSpieler.remove(gespielteKarte);
         
+        mapBlattSpieler.put(spieler, kartenVonSpieler);
+
         //gelegte Karte zum Stich hinzufügen
-        stich.getMapKarteSpieler().put(karte, spieler);
+        stich.getMapKarteSpieler().put(gespielteKarte, spieler);
         return true;
     }
     
-    public void istRe(){
-        for(ArrayList<Karte> blatt : mapBlattSpieler.keySet()){
-            for(Karte k : blatt){
+    public void fuelleListenKontraRe(Spieler spieler){
+        boolean kontra = true;
+        for(Karte k : mapBlattSpieler.get(spieler)){
                 if(k.istKarteTrumpf() && k.getId() == 10){
-                    re.add(mapBlattSpieler.get(blatt));
+                    kontra = false;
                 }
-            }
         }
-    }
-    
-    public void istContra(){
-        if(!re.isEmpty()){
-            for(Spieler sp : mapBlattSpieler.values()){
-                if(!re.contains(sp)){
-                    contra.add(sp);
-                }
-            }
+        if(kontra){
+            contra.add(spieler);
+        }else{
+            re.add(spieler);
         }
     }
     
@@ -172,11 +173,8 @@ public class Runde {
         }
         return false;
     }
-    
-    public Runde(){
-    }
 
-    public Runde(int punkteRe, int punkteContra, ArrayList<Stich> stiche, LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler, Spieler kommtRaus, ArrayList<Spieler> re, ArrayList<Spieler> contra, LinkedHashMap<ArrayList<Karte>, Spieler> mapBlattSpieler) {
+    public Runde(int punkteRe, int punkteContra, ArrayList<Stich> stiche, LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler, Spieler kommtRaus, ArrayList<Spieler> re, ArrayList<Spieler> contra) {
         this.punkteRe = punkteRe;
         this.punkteContra = punkteContra;
         this.stiche = stiche;
@@ -184,7 +182,6 @@ public class Runde {
         this.kommtRaus = kommtRaus;
         this.re = re;
         this.contra = contra;
-        this.mapBlattSpieler = mapBlattSpieler;
     }
 
     public int getPunkteRe() {
@@ -243,11 +240,11 @@ public class Runde {
         this.contra = contra;
     }
 
-    public LinkedHashMap<ArrayList<Karte>, Spieler> getMapBlattSpieler() {
+    public LinkedHashMap<Spieler, ArrayList<Karte>> getMapBlattSpieler() {
         return mapBlattSpieler;
     }
 
-    public void setMapBlattSpieler(LinkedHashMap<ArrayList<Karte>, Spieler> mapBlattSpieler) {
+    public void setMapBlattSpieler(LinkedHashMap<Spieler, ArrayList<Karte>> mapBlattSpieler) {
         this.mapBlattSpieler = mapBlattSpieler;
     }
 
@@ -257,7 +254,33 @@ public class Runde {
 
     public void setTackenRe(int tackenRe) {
         this.tackenRe = tackenRe;
+    }    
+    
+    public String blattToJSON(){
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+        Spieler spieler0 = Spielverwaltung.getInstance().spielerPlatz0;
+        Spieler spieler1 = Spielverwaltung.getInstance().spielerPlatz1;
+        Spieler spieler2 = Spielverwaltung.getInstance().spielerPlatz2;
+        Spieler spieler3 = Spielverwaltung.getInstance().spielerPlatz3;
+        
+        jsonObjectBuilder.add("kommtRaus", getKommtRaus().getName());
+        jsonObjectBuilder.add("0", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler0)));
+        jsonObjectBuilder.add("1", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler1)));
+        jsonObjectBuilder.add("2", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler2)));
+        jsonObjectBuilder.add("3", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler3)));
+        
+        return jsonObjectBuilder.build().toString();
     }
     
+    private JsonArray createJsonArrayFromBlatt(ArrayList<Karte> listKarte){
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        for(Karte karte : listKarte){
+            JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+            jsonObjectBuilder.add("id", karte.getId());
+            jsonObjectBuilder.add("bildpfad", karte.getBildpfad());
+            jsonArrayBuilder.add(jsonObjectBuilder.build());
+        }  
+        return jsonArrayBuilder.build();
+    }
     
 }

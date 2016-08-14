@@ -27,7 +27,7 @@ public class Karte {
         }
         for(FEHL f : FEHL.values()){
             if(f.name().equals(karte)){
-                id = f.ordinal();
+                id = -f.ordinal();
                 return false;
             }
         }
