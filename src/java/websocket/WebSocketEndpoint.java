@@ -101,24 +101,26 @@ public class WebSocketEndpoint{
             
             Stich letzterAbgeschlossenerStich = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getLetzterAbgeschlossenerStich();
             Stich aktuellerOffenerStich = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich();
-
+            
             if(aktuellerOffenerStich == null){ // Erste Karte in einem Stich
-                legeKarte(text,session);
+//                legeKarte(text,session);
                 Stich stich = new Stich();
                 stich.getMapKarteSpieler().put(spieler, karte);
                 ArrayList<Stich> stiche = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getStiche();
                 stiche.add(stich);
                 Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().setStiche(stiche);
+                sendeStich(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich(), session, spieler, karte);
             }
             else if(aktuellerOffenerStich.wirdRichtigBedient(karte,spieler)){// Kommt nicht raus. Wird richtig bedient?
-                legeKarte(text,session);
                 //gelegte Karte zum Stich hinzufügen
                 Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().getMapKarteSpieler().put(spieler, karte);
                 if(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().getMapKarteSpieler().size() == 4){
                     //Alle haben gelegt
-                    Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().auswerten();
-                    sendeStichErgebnis(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getLetzterAbgeschlossenerStich(), session);
+                    sendeStich(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().auswerten(), session, spieler, karte);
+                }else{
+                    sendeStich(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich(), session, spieler, karte);
                 }
+//                legeKarte(text,session);
             }
         }
         if(aufgabenTyp.equals("kartenverteilen")){
@@ -148,7 +150,21 @@ public class WebSocketEndpoint{
         
     }   
     
-    public void sendeStichErgebnis(Stich stich, Session session){
+    public void sendeStich(Stich stich, Session session, Spieler spieler, Karte karte){
+        try {
+            String urlPfad = session.getRequestURI().getPath();
+            for (Session s : session.getOpenSessions()) {
+                if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
+                    s.getBasicRemote().sendObject(stich.getJsonFormat(spieler,karte));
+                }
+            }
+        } catch (IOException | EncodeException e) {
+            System.out.println("Error " + e.getMessage());
+        }
+    }
+    
+    public void legeKarte(String text, Session session){
+        
         try {
             String urlPfad = session.getRequestURI().getPath();
             for (Session s : session.getOpenSessions()) {
@@ -159,19 +175,6 @@ public class WebSocketEndpoint{
         } catch (IOException | EncodeException e) {
             System.out.println("Error " + e.getMessage());
         }
-    }
-    
-    public void legeKarte(String text, Session session){
-        try {
-                String urlPfad = session.getRequestURI().getPath();
-                for (Session s : session.getOpenSessions()) {
-                    if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
-                        s.getBasicRemote().sendObject(text);
-                    }
-                }
-                } catch (IOException | EncodeException e) {
-                    System.out.println("Error " + e.getMessage());
-                }
     }
     
     public void verteileKarten(Runde runde, Set<Session> sessions) throws IOException, EncodeException{

@@ -5,10 +5,13 @@
  */
 package Doppelkopf;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.json.Json;
+import javax.json.JsonObject;
 
 /**
  *
@@ -27,7 +30,7 @@ public class Stich {
         this.mapKarteSpieler = new LinkedHashMap();
     }
 
-    public void auswerten(){
+    public Stich auswerten(){
         for(Entry<Spieler, Karte> entrySpielerKarte : mapKarteSpieler.entrySet()){
             if(stichGehoert == null || entrySpielerKarte.getValue().getId() > hoechsteKarte.getId()){
                 stichGehoert = entrySpielerKarte.getKey();
@@ -37,6 +40,7 @@ public class Stich {
         for(Karte k : mapKarteSpieler.values()){
             punkte += k.getWert();
         }
+        return this;
     }
     
     public boolean istAbgeschlossen(){
@@ -114,6 +118,20 @@ public class Stich {
 //            break;
 //        }
     }
+    
+    public String getJsonFormat(Spieler spieler, Karte karte){
+        String tmpStichGehoert = "";
+        if(this.stichGehoert != null){
+            tmpStichGehoert = this.stichGehoert.getName();
+        }
+        return Json.createObjectBuilder()
+                .add("stichGehoert", tmpStichGehoert)
+                .add("user", spieler.getName())
+                .add("kartenId", karte.getId())
+                .add("bildpfad", karte.getBildpfad())
+                .build().toString();   
+    }
+    
     
     public int getPunkte() {
         return punkte;
