@@ -17,27 +17,26 @@ public class Karte {
     private BILD bild;
     
     public boolean istKarteTrumpf(){
-        String karte = farbe.name() + bild.name();
-        System.out.println(karte);
-        for(TRUMPF t : TRUMPF.values()){
-            if(t.name().equals(karte)){
-                id = t.ordinal();
-                return true;
-            }
+        if(id >= 0){
+            return true;
         }
-        for(FEHL f : FEHL.values()){
-            if(f.name().equals(karte)){
-                id = -f.ordinal();
-                return false;
-            }
-        }
+//        String karte = farbe.name() + bild.name();
+//        System.out.println(karte);
+//        for(TRUMPF t : TRUMPF.values()){
+//            if(t.name().equals(karte)){
+//                id = t.ordinal();
+//                return true;
+//            }
+//        }
+//        for(FEHL f : FEHL.values()){
+//            if(f.name().equals(karte)){
+//                id = -f.ordinal();
+//                return false;
+//            }
+//        }
         return false;
     }
-    
-    
-    
-    
-    
+
     public Karte(int id, FARBE farbe, int wert, String bildpfad, BILD bild) {
         this.id = id;
         this.farbe = farbe;

@@ -90,6 +90,17 @@ public class Spiel {
         
     }
     
+    public Spieler getSpielerMitUsername(String username){
+        for(Spieler spieler : this.listSpieler){
+            if(spieler.getName().equals(username)){
+                return spieler;
+            }
+        }
+        return null;
+    }
+    
+    
+    
     public Runde kartenGeben() throws IOException, EncodeException{
         Spieler kommtRaus = listSpieler.get(zaehler);
         Runde runde = new Runde(kommtRaus);
@@ -152,7 +163,42 @@ public class Spiel {
         runde.getMapBlattSpieler().put(listSpieler.get(1), kartenSpieler1);
         runde.getMapBlattSpieler().put(listSpieler.get(2), kartenSpieler2);
         runde.getMapBlattSpieler().put(listSpieler.get(3), kartenSpieler3);
+        this.listRunden.add(runde);
         return runde;
 //        WebSocketEndpoint.getInstance().verteileKarten(runde);
     }
+    
+    public Runde getLetzteRunde(){
+        if(this.listRunden.isEmpty()){
+            return null;
+        }else{
+            return this.listRunden.get(this.listRunden.size() - 1 );
+        }
+    }
+
+    public ArrayList<Runde> getListRunden() {
+        return listRunden;
+    }
+
+    public void setListRunden(ArrayList<Runde> listRunden) {
+        this.listRunden = listRunden;
+    }
+
+    public ArrayList<Spieler> getListSpieler() {
+        return listSpieler;
+    }
+
+    public void setListSpieler(ArrayList<Spieler> listSpieler) {
+        this.listSpieler = listSpieler;
+    }
+
+    public ArrayList<Karte> getListKarten() {
+        return listKarten;
+    }
+
+    public void setListKarten(ArrayList<Karte> listKarten) {
+        this.listKarten = listKarten;
+    }
+    
+    
 }

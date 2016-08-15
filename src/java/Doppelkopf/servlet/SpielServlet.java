@@ -142,6 +142,26 @@ public class SpielServlet extends HttpServlet {
                     "</div>\n" +
 
 "  </div>\n" +
+"</div>"+
+"<!-- Modal -->\n" +
+"<div id=\"modalBereitZuSpielen\" class=\"modal fade\" role=\"dialog\">\n" +
+"  <div class=\"modal-dialog\">\n" +
+"\n" +
+"    <!-- Modal content-->\n" +
+"    <div class=\"modal-content\">\n" +
+"      <div class=\"modal-header\">\n" +
+"        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n" +
+"        <h4 class=\"modal-title\">Es sind vier Spieler anwesend</h4>\n" +
+"      </div>\n" +
+"      <div class=\"modal-body\">\n" +
+"        <p>Bist du bereit zu spielen?</p>\n" +
+"      </div>\n" +
+"      <div class=\"modal-footer\">\n" +
+"        <button id=\"buttonBereitZuSpielen\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Bereit</button>\n" +
+"      </div>\n" +
+"    </div>\n" +
+"\n" +
+"  </div>\n" +
 "</div>"
             );
             out.println("</body>");

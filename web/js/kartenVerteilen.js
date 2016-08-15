@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-
 var bereit = false;
 var webSocketKartenverteilen;
 var serverURLKartenverteilen = "ws://" + window.location.hostname + ":8080/Doppelkopf/websocket/kartenverteilen";

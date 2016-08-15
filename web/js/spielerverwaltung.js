@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-var spielerLinks;
-var spielerOben;
-var spielerRechts;
+var spielerLinks = "";
+var spielerOben = "";
+var spielerRechts = "";
 var eigenerPlatz;
 
 var webSocketSpielerverwaltung;
@@ -31,6 +31,10 @@ $(document).ready(function() {
     if($("#pSpielerRechts").text() != "offline"){
         spielerRechts = $("#pSpielerRechts").text();
     }
+    checkVierSpielerAnwesend();
+    $('#buttonBereitZuSpielen').click(function(evt) {
+        bereitZumSpielen();
+    }); 
 })
 
 function spielerUpdate(spieler0, spieler1, spieler2, spieler3){
@@ -62,5 +66,12 @@ function spielerUpdate(spieler0, spieler1, spieler2, spieler3){
     }
     if(spielerRechts != ""){
         document.getElementById('pSpielerRechts').innerHTML = spielerRechts;
+    }
+    checkVierSpielerAnwesend();
+}
+
+function checkVierSpielerAnwesend(){
+    if(spielerOben != "" && spielerLinks != "" && spielerRechts != ""){
+        $('#modalBereitZuSpielen').modal('show');
     }
 }

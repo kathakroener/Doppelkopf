@@ -5,17 +5,23 @@
  */
 package websocket;
 
+import Doppelkopf.Karte;
 import Doppelkopf.Runde;
 import Doppelkopf.Spieler;
 import Doppelkopf.Spielverwaltung;
+import Doppelkopf.Stich;
 import websocket.Model.Nachricht;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.websocket.EncodeException;
 import javax.websocket.Endpoint;
 import javax.websocket.OnMessage;
@@ -89,15 +95,30 @@ public class WebSocketEndpoint{
             }
         }
         if(aufgabenTyp.equals("kartelegen")){
-            try {
-                String urlPfad = session.getRequestURI().getPath();
-                for (Session s : session.getOpenSessions()) {
-                    if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
-                        s.getBasicRemote().sendObject(text);
-                    }
+            JsonObject obj = Json.createReader(new StringReader(text)).readObject();
+            Spieler spieler = Spielverwaltung.getInstance().getAktSpiel().getSpielerMitUsername(obj.getString("user"));
+            Karte karte = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getKarteMitId(spieler, Integer.parseInt(obj.getString("kartenId")));
+            
+            Stich letzterAbgeschlossenerStich = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getLetzterAbgeschlossenerStich();
+            Stich aktuellerOffenerStich = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich();
+
+            if(aktuellerOffenerStich == null){ // Erste Karte in einem Stich
+                legeKarte(text,session);
+                Stich stich = new Stich();
+                stich.getMapKarteSpieler().put(spieler, karte);
+                ArrayList<Stich> stiche = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getStiche();
+                stiche.add(stich);
+                Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().setStiche(stiche);
+            }
+            else if(aktuellerOffenerStich.wirdRichtigBedient(karte,spieler)){// Kommt nicht raus. Wird richtig bedient?
+                legeKarte(text,session);
+                //gelegte Karte zum Stich hinzufügen
+                Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().getMapKarteSpieler().put(spieler, karte);
+                if(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().getMapKarteSpieler().size() == 4){
+                    //Alle haben gelegt
+                    Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().auswerten();
+                    sendeStichErgebnis(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getLetzterAbgeschlossenerStich(), session);
                 }
-            } catch (IOException | EncodeException e) {
-                System.out.println("Error " + e.getMessage());
             }
         }
         if(aufgabenTyp.equals("kartenverteilen")){
@@ -126,6 +147,32 @@ public class WebSocketEndpoint{
         }
         
     }   
+    
+    public void sendeStichErgebnis(Stich stich, Session session){
+        try {
+            String urlPfad = session.getRequestURI().getPath();
+            for (Session s : session.getOpenSessions()) {
+                if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
+                    s.getBasicRemote().sendObject(text);
+                }
+            }
+        } catch (IOException | EncodeException e) {
+            System.out.println("Error " + e.getMessage());
+        }
+    }
+    
+    public void legeKarte(String text, Session session){
+        try {
+                String urlPfad = session.getRequestURI().getPath();
+                for (Session s : session.getOpenSessions()) {
+                    if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
+                        s.getBasicRemote().sendObject(text);
+                    }
+                }
+                } catch (IOException | EncodeException e) {
+                    System.out.println("Error " + e.getMessage());
+                }
+    }
     
     public void verteileKarten(Runde runde, Set<Session> sessions) throws IOException, EncodeException{
         for (Session s : sessions) {

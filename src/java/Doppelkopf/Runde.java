@@ -25,58 +25,16 @@ public class Runde {
     private Spieler kommtRaus;
     private ArrayList<Spieler> re;
     private ArrayList<Spieler> contra;
-    private LinkedHashMap<Spieler, ArrayList<Karte>> mapBlattSpieler;
+    public LinkedHashMap<Spieler, ArrayList<Karte>> mapBlattSpieler;
     private int tackenRe;
 
     public Runde(Spieler kommtRaus) {
-        mapBlattSpieler = new LinkedHashMap<Spieler, ArrayList<Karte>>();
-        mapAnsagenSpieler = new LinkedHashMap<ANSAGEN, Spieler>();
-        re = new ArrayList<Spieler>();
-        contra = new ArrayList<Spieler>();
-        stiche = new ArrayList<Stich>();
+        mapBlattSpieler = new LinkedHashMap<>();
+        mapAnsagenSpieler = new LinkedHashMap<>();
+        re = new ArrayList<>();
+        contra = new ArrayList<>();
+        stiche = new ArrayList<>();
         this.kommtRaus = kommtRaus;
-    }
-
-    public boolean karteLegen(Stich stich, Karte gespielteKarte, Spieler spieler){
-        ArrayList<Karte> kartenVonSpieler = null;
-        boolean spielerHatTrumpf = false;
-        
-        //Blatt des übergebenen Spielers ermitteln        
-        kartenVonSpieler = mapBlattSpieler.get(spieler);
-        
-        
-        //überprüfen, ob Spieler noch Trumpf auf der Hand hat
-        for(Karte trumpf : kartenVonSpieler){
-            if(trumpf.istKarteTrumpf()){
-                spielerHatTrumpf = true;
-            }
-        }
-        
-        //überprüfen, ob mit ausgewählter Karte falsch bedient würde
-        if(!gespielteKarte.istKarteTrumpf() && spielerHatTrumpf){
-            int zaehler = 0;
-            for(Karte k : stich.getMapKarteSpieler().keySet()){
-                if(zaehler == 0){
-                    if(k.istKarteTrumpf()){
-                        System.out.println("Trumpf muss bedient werden!");
-                        return false;
-                    } else if(!gespielteKarte.getFarbe().equals(k.getFarbe())){
-                        System.out.println(k.getFarbe() + "muss bedient werden!");
-                        return false;
-                    }
-                }
-                zaehler++;       
-            }
-        }
-        
-        //gelegte Karte aus dem Blatt des Spielers entfernen    
-        kartenVonSpieler.remove(gespielteKarte);
-        
-        mapBlattSpieler.put(spieler, kartenVonSpieler);
-
-        //gelegte Karte zum Stich hinzufügen
-        stich.getMapKarteSpieler().put(gespielteKarte, spieler);
-        return true;
     }
     
     public void fuelleListenKontraRe(Spieler spieler){
@@ -131,47 +89,87 @@ public class Runde {
                 }
             }
         }
-        fuchsGefangen();
+//        fuchsGefangen();
     }
     
     
-    public void fuchsGefangen(){
-        Karte fuchsGefunden = null;
-        for(Stich s : stiche){
-            for(Karte k : s.getMapKarteSpieler().keySet()){
-                if(k.istKarteTrumpf() && k.getId() == 2){
-                    
-                    //überprüfen, ob der Stich eine höhere Karte als den Fuchs enthält
-                    if(s.getHoechste().istKarteTrumpf() && s.getHoechste().getId() > 2){
-                        //überprüfen, ob die höhere Karte aus dem gleichen Team kommt wie der Fuchs
-                        if(re.contains(s.getStichGehoert()) && contra.contains(s.getMapKarteSpieler().get(k))){
-                            tackenRe++;
-                        } else if(contra.contains(s.getStichGehoert()) && re.contains(s.getMapKarteSpieler().get(k))){
-                            tackenRe--;
-                        }
-                    }
-                    
-                    //überprüfen, ob mit dem ersten Fuchs ein zweiter gefangen wurde
-                    if(fuchsGefunden != null && s.getHoechste().getId() == 2){
-                        if(re.contains(s.getMapKarteSpieler().get(k)) && contra.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
-                            tackenRe--;
-                        } else if(contra.contains(s.getMapKarteSpieler().get(k)) && re.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
-                            tackenRe++;
-                        }
-                    }
-                    fuchsGefunden = k;
-                }
+//    public void fuchsGefangen(){
+//        Karte fuchsGefunden = null;
+//        for(Stich s : stiche){
+//            for(Karte k : s.getMapKarteSpieler().keySet()){
+//                if(k.istKarteTrumpf() && k.getId() == 2){
+//                    
+//                    //überprüfen, ob der Stich eine höhere Karte als den Fuchs enthält
+//                    if(s.getHoechsteKarte().istKarteTrumpf() && s.getHoechsteKarte().getId() > 2){
+//                        //überprüfen, ob die höhere Karte aus dem gleichen Team kommt wie der Fuchs
+//                        if(re.contains(s.getStichGehoert()) && contra.contains(s.getMapKarteSpieler().get(k))){
+//                            tackenRe++;
+//                        } else if(contra.contains(s.getStichGehoert()) && re.contains(s.getMapKarteSpieler().get(k))){
+//                            tackenRe--;
+//                        }
+//                    }
+//                    
+//                    //überprüfen, ob mit dem ersten Fuchs ein zweiter gefangen wurde
+//                    if(fuchsGefunden != null && s.getHoechsteKarte().getId() == 2){
+//                        if(re.contains(s.getMapKarteSpieler().get(k)) && contra.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
+//                            tackenRe--;
+//                        } else if(contra.contains(s.getMapKarteSpieler().get(k)) && re.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
+//                            tackenRe++;
+//                        }
+//                    }
+//                    fuchsGefunden = k;
+//                }
+//            }
+//        }
+//    }
+    
+    public Stich getLetzterAbgeschlossenerStich(){
+        if(this.getStiche().isEmpty()){
+            return null;
+        }else{
+            if(this.getStiche().size() > 1 && !this.getStiche().get(this.getStiche().size() - 1).istAbgeschlossen()){
+                return this.getStiche().get(this.getStiche().size() - 2);
             }
+//            else if(this.getStiche().size() > 1 && this.getStiche().get(this.getStiche().size() - 1).istAbgeschlossen()){
+//                return this.getStiche().get(this.getStiche().size() - 1);
+//            }
+            else{
+                return null;
+            }
+            
         }
     }
     
-
+    public Stich getAktuellerOffenerStich(){
+        if(this.getStiche().isEmpty()){
+            return null;
+        }else{
+            if(!this.getStiche().get(this.getStiche().size() - 1).istAbgeschlossen()){
+                return this.getStiche().get(this.getStiche().size() - 1);
+            }
+            else{
+                return null;
+            }
+        }
+    }
     
     public boolean rundeBeendet(){
         if(stiche.size() == 10){
             return true;
         }
         return false;
+    }
+    
+    public Karte getKarteMitId(Spieler spieler, int id){
+        ArrayList<Karte> blattSpieler = this.mapBlattSpieler.get(spieler);
+        if(blattSpieler != null){
+            for(Karte karte : blattSpieler){
+                if(karte.getId() == id){
+                    return karte;
+                }
+            }
+        }
+        return null;
     }
 
     public Runde(int punkteRe, int punkteContra, ArrayList<Stich> stiche, LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler, Spieler kommtRaus, ArrayList<Spieler> re, ArrayList<Spieler> contra) {
@@ -282,5 +280,7 @@ public class Runde {
         }  
         return jsonArrayBuilder.build();
     }
+    
+    
     
 }
