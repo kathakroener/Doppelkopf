@@ -29,9 +29,18 @@ public class Stich {
 
     public void auswerten(){
         for(Entry<Spieler, Karte> entrySpielerKarte : mapKarteSpieler.entrySet()){
-            if(stichGehoert == null || entrySpielerKarte.getValue().getId() > hoechsteKarte.getId()){
+            if(stichGehoert == null || hoechsteKarte == null 
+                    || entrySpielerKarte.getValue().getId() > hoechsteKarte.getId()){
                 stichGehoert = entrySpielerKarte.getKey();
                 hoechsteKarte = entrySpielerKarte.getValue();
+            }else if(!this.getErsteKarte().istKarteTrumpf()){
+                if((!entrySpielerKarte.getValue().istKarteTrumpf()
+                        && entrySpielerKarte.getValue().getFarbe().equals(this.getErsteKarte().getFarbe()) 
+                        && entrySpielerKarte.getValue().getId() > this.getErsteKarte().getId())
+                        || entrySpielerKarte.getValue().istKarteTrumpf()){
+                    stichGehoert = entrySpielerKarte.getKey();
+                    hoechsteKarte = entrySpielerKarte.getValue();
+                }
             }
         }
         for(Karte k : mapKarteSpieler.values()){
