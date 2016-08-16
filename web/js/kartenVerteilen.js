@@ -13,16 +13,24 @@ function kartenverteilen(event) {
     var karten = JSON.parse(event.data);
     zeigeKarten(karten[eigenerPlatz]);
     kommtRaus = karten.kommtRaus;
+    noty({text: 'Die Runde geht los. ' + kommtRaus + ' kommt raus!', type: 'information'});
 }
 
 $(document).ready(function() {
     webSocketKartenverteilen = new WebSocket(serverURLKartenverteilen);
-    webSocketKartenverteilen.onmessage = kartenverteilen;    
+    webSocketKartenverteilen.onmessage = kartenverteilen;  
+    
+    $('#buttonModalNaechsteRunde').click(function(evt) {
+        bereitZumSpielen();
+    }); 
+    $('#buttonModalLogout').click(function(evt) {
+        bereitZumSpielen();
+    }); 
 })
 
 function bereitZumSpielen(){
     if(bereit == false){
-        breit = true;
+        bereit = true;
         var msg = 'bereit';
         webSocketKartenverteilen.send(msg);
     }

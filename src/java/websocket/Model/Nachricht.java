@@ -35,6 +35,23 @@ public class Nachricht  {
                 .add("empfangen", this.getFormatEmpfangen()).build()
                 .toString();
     }
+    
+    public String getFormatEmpfangen(){
+        String returnString = "";
+        if(empfangen.getHours() < 10){
+            returnString += "0";
+        }
+        returnString += Integer.toString(empfangen.getHours()) + ":";
+        if(empfangen.getMinutes() < 10){
+            returnString += "0";
+        }
+        returnString += Integer.toString(empfangen.getMinutes()) + ":";
+        if(empfangen.getSeconds() < 10){
+            returnString += "0";
+        }
+        returnString += Integer.toString(empfangen.getSeconds());
+        return returnString;
+    }
 
     public Nachricht() {
     }
@@ -61,22 +78,5 @@ public class Nachricht  {
 
     public void setEmpfangen(Date empfangen) {
         this.empfangen = empfangen;
-    }
-    
-    public String getFormatEmpfangen(){
-        String returnString = "";
-        if(empfangen.getHours() < 10){
-            returnString += "0";
-        }
-        returnString += Integer.toString(empfangen.getHours()) + ":";
-        if(empfangen.getMinutes() < 10){
-            returnString += "0";
-        }
-        returnString += Integer.toString(empfangen.getMinutes()) + ":";
-        if(empfangen.getSeconds() < 10){
-            returnString += "0";
-        }
-        returnString += Integer.toString(empfangen.getSeconds());
-        return returnString;
     }
 }

@@ -54,6 +54,7 @@ public class SpielServlet extends HttpServlet {
             out.println("<script src='js/kartenVerteilen.js'></script>");
             out.println("<script src='js/spiel.js'></script>");
             out.println("<script src='js/jquery-ui.js'></script>");
+            out.println("<script src='js/jquery.noty.packaged.min.js'></script>");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");        
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-theme.css\">");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/spiel.css\">");
@@ -142,15 +143,17 @@ public class SpielServlet extends HttpServlet {
                     "</div>\n" +
 
 "  </div>\n" +
+                    
+                    
 "</div>"+
-"<!-- Modal -->\n" +
+"<!-- Modal Bereit zu spielen-->\n" +
 "<div id=\"modalBereitZuSpielen\" class=\"modal fade\" role=\"dialog\">\n" +
 "  <div class=\"modal-dialog\">\n" +
 "\n" +
 "    <!-- Modal content-->\n" +
 "    <div class=\"modal-content\">\n" +
 "      <div class=\"modal-header\">\n" +
-"        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n" +
+//"        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n" +
 "        <h4 class=\"modal-title\">Es sind vier Spieler anwesend</h4>\n" +
 "      </div>\n" +
 "      <div class=\"modal-body\">\n" +
@@ -158,6 +161,99 @@ public class SpielServlet extends HttpServlet {
 "      </div>\n" +
 "      <div class=\"modal-footer\">\n" +
 "        <button id=\"buttonBereitZuSpielen\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Bereit</button>\n" +
+"      </div>\n" +
+"    </div>\n" +
+"\n" +
+"  </div>\n" +
+"</div>" +
+                    "</div>"+
+"<!-- Modal Rundenergebnis -->\n" +
+"<div id=\"modalRundenErgebnis\" class=\"modal fade\" role=\"dialog\">\n" +
+"  <div class=\"modal-dialog\">\n" +
+"    <!-- Modal content-->\n" +
+"    <div class=\"modal-content\">\n" +
+"      <div class=\"modal-header\">\n" +
+"        <h4 class=\"modal-title\">Rundenergebnis</h4>\n" +
+"      </div>\n" +
+"      <div class=\"modal-body\">\n" +
+//"<h5 class=\"text-center\">Überschrift Punkte</h5>\n"+
+"      <table class=\"table table-striped\">\n" +
+"           <thead>\n" +
+"               <tr>\n" +
+"                   <th></th>\n" +
+"                   <th>Re</th>\n" +
+"                   <th class=\"text-right\">Contra</th>\n" +
+"               </tr>\n" +
+"           </thead>\n" +
+"           <tbody>\n" +
+"               <tr>" +
+"                   <td>Punkte</td>\n" +
+"                   <td id=\"modalTableZellePunkteRe\"></td>\n" +
+"                   <td id=\"modalTableZellePunkteContra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +  
+"           </tbody>\n" +
+"      </table>\n" +
+//"<h5 class=\"text-center\">Übersicht der Tacken</h5>\n"+
+"      <table class=\"table table-striped\">\n" +
+"           <thead>\n" +
+"               <tr>\n" +
+"                   <th></th>\n" +
+"                   <th>Tacken Re</th>\n" +
+"                   <th class=\"text-right\">Tacken Contra</th>\n" +
+"               </tr>\n" +
+"           </thead>\n" +
+"           <tbody>\n" +
+"              <tr>" +
+"                   <td>Keine 120</td>\n" +
+"                   <td id=\"modalTableZelleKeine120Re\"></td>\n" +
+"                   <td id=\"modalTableZelleKeine120Contra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +
+"              <tr>" +
+"                   <td>Keine 90</td>\n" +
+"                   <td id=\"modalTableZelleKeine90Re\"></td>\n" +
+"                   <td id=\"modalTableZelleKeine90Contra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +   
+"              <tr>" +
+"                   <td>Keine 60</td>\n" +
+"                   <td id=\"modalTableZelleKeine60Re\"></td>\n" +
+"                   <td id=\"modalTableZelleKeine60Contra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +  
+"              <tr>" +
+"                   <td>Keine 30</td>\n" +
+"                   <td id=\"modalTableZelleKeine30Re\"></td>\n" +
+"                   <td id=\"modalTableZelleKeine30Contra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +  
+"              <tr>" +
+"                   <td>Schwarz</td>\n" +
+"                   <td id=\"modalTableZelleSchwarzRe\"></td>\n" +
+"                   <td id=\"modalTableZelleSchwarzContra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +  
+"              <tr>" +
+"                   <td>Charlie am End</td>\n" +
+"                   <td id=\"modalTableZelleCharlieAmEndeRe\"></td>\n" +
+"                   <td id=\"modalTableZelleCharlieAmEndeContra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +  
+"              <tr>" +
+"                   <td>Doppelkopf</td>\n" +
+"                   <td id=\"modalTableZelleDoppelkopfRe\"></td>\n" +
+"                   <td id=\"modalTableZelleDoppelkopfContra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +  
+"              <tr>" +
+"                   <td>Fuchs gefangen</td>\n" +
+"                   <td id=\"modalTableZelleFuchsGefangenRe\"></td>\n" +
+"                   <td id=\"modalTableZelleFuchsGefangenContra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +  
+"              <tr>" +
+"                   <td>Gesamt Tacken</td>\n" +
+"                   <td id=\"modalTableZelleGesamtTackenRe\"></td>\n" +
+"                   <td id=\"modalTableZelleGesamtTackenContra\" class=\"text-right\"></td>\n" +
+"              </tr>\n" +  
+"           </tbody>\n" +
+"       </table>\n" +
+"      </div>\n" +
+"      <div class=\"modal-footer\">\n" +
+"        <button id=\"buttonModalLogout\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Logout</button>\n" +
+"        <button id=\"buttonModalNaechsteRunde\" type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">Nächste Runde</button>\n" +
 "      </div>\n" +
 "    </div>\n" +
 "\n" +

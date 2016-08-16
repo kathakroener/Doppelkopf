@@ -22,11 +22,8 @@ public class Spiel {
     private int zaehler = 0;
 
     public Spiel(ArrayList<Spieler> teilnehmendeSpieler){
-        listKartenFuellen();
         listRunden = new ArrayList();
         listSpieler = teilnehmendeSpieler;
-        
-//        kartenGeben(); 
     }
     
     public int getPlatz(User user){
@@ -102,6 +99,7 @@ public class Spiel {
     
     
     public Runde kartenGeben() throws IOException, EncodeException{
+        listKartenFuellen();
         Spieler kommtRaus = listSpieler.get(zaehler);
         Runde runde = new Runde(kommtRaus);
         if(zaehler == 3){
@@ -163,6 +161,7 @@ public class Spiel {
         runde.getMapBlattSpieler().put(listSpieler.get(1), kartenSpieler1);
         runde.getMapBlattSpieler().put(listSpieler.get(2), kartenSpieler2);
         runde.getMapBlattSpieler().put(listSpieler.get(3), kartenSpieler3);
+        runde.fuelleListenKontraRe(listSpieler);
         this.listRunden.add(runde);
         return runde;
 //        WebSocketEndpoint.getInstance().verteileKarten(runde);

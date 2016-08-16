@@ -5,6 +5,7 @@
  */
 package Doppelkopf;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import javax.json.Json;
@@ -23,37 +24,44 @@ public class Runde {
     private ArrayList<Stich> stiche;
     private LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler;
     private Spieler kommtRaus;
-    private ArrayList<Spieler> re;
-    private ArrayList<Spieler> contra;
+    private ArrayList<Spieler> listSpielerRe;
+    private ArrayList<Spieler> listSpielerContra;
     public LinkedHashMap<Spieler, ArrayList<Karte>> mapBlattSpieler;
     private int tackenRe;
 
     public Runde(Spieler kommtRaus) {
-        mapBlattSpieler = new LinkedHashMap<>();
-        mapAnsagenSpieler = new LinkedHashMap<>();
-        re = new ArrayList<>();
-        contra = new ArrayList<>();
-        stiche = new ArrayList<>();
+        this.mapBlattSpieler = new LinkedHashMap<>();
+        this.mapAnsagenSpieler = new LinkedHashMap<>();
+        this.listSpielerRe = new ArrayList<>();
+        this.listSpielerContra = new ArrayList<>();
+        this.stiche = new ArrayList<>();
         this.kommtRaus = kommtRaus;
     }
     
-    public void fuelleListenKontraRe(Spieler spieler){
-        boolean kontra = true;
-        for(Karte k : mapBlattSpieler.get(spieler)){
-                if(k.istKarteTrumpf() && k.getId() == 10){
-                    kontra = false;
-                }
+    public void fuelleListenKontraRe(ArrayList<Spieler> listSpieler){
+        for(Spieler spieler : listSpieler){
+            boolean contra = true;
+            for(Karte k : mapBlattSpieler.get(spieler)){
+                    if(k.istKarteTrumpf() && k.getId() == 10){
+                        contra = false;
+                    }
+            }
+            if(contra){
+                listSpielerContra.add(spieler);
+            }else{
+                listSpielerRe.add(spieler);
+            }
         }
-        if(kontra){
-            contra.add(spieler);
-        }else{
-            re.add(spieler);
-        }
+    }
+    
+    public void auswertung(){
+        berechnePunkte();
+        berechneTackenRe();
     }
     
     public void berechnePunkte(){
         for(Stich s : stiche){
-            if(re.contains(s.getStichGehoert())){
+            if(listSpielerRe.contains(s.getStichGehoert())){
                 punkteRe += s.getPunkte();
             }
         }
@@ -171,15 +179,54 @@ public class Runde {
         }
         return null;
     }
-
-    public Runde(int punkteRe, int punkteContra, ArrayList<Stich> stiche, LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler, Spieler kommtRaus, ArrayList<Spieler> re, ArrayList<Spieler> contra) {
-        this.punkteRe = punkteRe;
-        this.punkteContra = punkteContra;
-        this.stiche = stiche;
-        this.mapAnsagenSpieler = mapAnsagenSpieler;
-        this.kommtRaus = kommtRaus;
-        this.re = re;
-        this.contra = contra;
+    
+    public String getAuswertungJsonString(){
+        JsonArrayBuilder jsonArrayBuilderListSpielerRe = Json.createArrayBuilder();
+        for(Spieler spieler : listSpielerRe){
+            JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+            jsonObjectBuilder.add("name", spieler.getName());
+            jsonArrayBuilderListSpielerRe.add(jsonObjectBuilder.build());
+        } 
+        JsonArrayBuilder jsonArrayBuilderListSpielerContra = Json.createArrayBuilder();
+        for(Spieler spieler : listSpielerContra){
+            JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+            jsonObjectBuilder.add("name", spieler.getName());
+            jsonArrayBuilderListSpielerContra.add(jsonObjectBuilder.build());
+        }
+        
+        return Json.createObjectBuilder()
+                .add("rundenAuswertung", true)
+                .add("auswertungRunde", new AuswertungRunde(this.punkteRe, this.punkteContra, this.mapAnsagenSpieler).getJsonObjectAuswertungRunde())
+                .add("spielerRe", jsonArrayBuilderListSpielerRe.build())
+                .add("spielerContra", jsonArrayBuilderListSpielerContra.build())
+                .build().toString();   
+    }
+    
+    public String blattToJSON(){
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+        Spieler spieler0 = Spielverwaltung.getInstance().spielerPlatz0;
+        Spieler spieler1 = Spielverwaltung.getInstance().spielerPlatz1;
+        Spieler spieler2 = Spielverwaltung.getInstance().spielerPlatz2;
+        Spieler spieler3 = Spielverwaltung.getInstance().spielerPlatz3;
+        
+        jsonObjectBuilder.add("kommtRaus", getKommtRaus().getName());
+        jsonObjectBuilder.add("0", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler0)));
+        jsonObjectBuilder.add("1", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler1)));
+        jsonObjectBuilder.add("2", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler2)));
+        jsonObjectBuilder.add("3", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler3)));
+        
+        return jsonObjectBuilder.build().toString();
+    }
+    
+    private JsonArray createJsonArrayFromBlatt(ArrayList<Karte> listKarte){
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        for(Karte karte : listKarte){
+            JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+            jsonObjectBuilder.add("id", karte.getId());
+            jsonObjectBuilder.add("bildpfad", karte.getBildpfad());
+            jsonArrayBuilder.add(jsonObjectBuilder.build());
+        }  
+        return jsonArrayBuilder.build();
     }
 
     public int getPunkteRe() {
@@ -222,22 +269,22 @@ public class Runde {
         this.kommtRaus = kommtRaus;
     }
 
-    public ArrayList<Spieler> getRe() {
-        return re;
+    public ArrayList<Spieler> getListSpielerRe() {
+        return listSpielerRe;
     }
 
-    public void setRe(ArrayList<Spieler> re) {
-        this.re = re;
+    public void setListSpielerRe(ArrayList<Spieler> listSpielerRe) {
+        this.listSpielerRe = listSpielerRe;
     }
 
-    public ArrayList<Spieler> getContra() {
-        return contra;
+    public ArrayList<Spieler> getListSpielerContra() {
+        return listSpielerContra;
     }
 
-    public void setContra(ArrayList<Spieler> contra) {
-        this.contra = contra;
+    public void setListSpielerContra(ArrayList<Spieler> listSpielerContra) {
+        this.listSpielerContra = listSpielerContra;
     }
-
+    
     public LinkedHashMap<Spieler, ArrayList<Karte>> getMapBlattSpieler() {
         return mapBlattSpieler;
     }
@@ -253,34 +300,4 @@ public class Runde {
     public void setTackenRe(int tackenRe) {
         this.tackenRe = tackenRe;
     }    
-    
-    public String blattToJSON(){
-        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
-        Spieler spieler0 = Spielverwaltung.getInstance().spielerPlatz0;
-        Spieler spieler1 = Spielverwaltung.getInstance().spielerPlatz1;
-        Spieler spieler2 = Spielverwaltung.getInstance().spielerPlatz2;
-        Spieler spieler3 = Spielverwaltung.getInstance().spielerPlatz3;
-        
-        jsonObjectBuilder.add("kommtRaus", getKommtRaus().getName());
-        jsonObjectBuilder.add("0", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler0)));
-        jsonObjectBuilder.add("1", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler1)));
-        jsonObjectBuilder.add("2", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler2)));
-        jsonObjectBuilder.add("3", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler3)));
-        
-        return jsonObjectBuilder.build().toString();
-    }
-    
-    private JsonArray createJsonArrayFromBlatt(ArrayList<Karte> listKarte){
-        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-        for(Karte karte : listKarte){
-            JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
-            jsonObjectBuilder.add("id", karte.getId());
-            jsonObjectBuilder.add("bildpfad", karte.getBildpfad());
-            jsonArrayBuilder.add(jsonObjectBuilder.build());
-        }  
-        return jsonArrayBuilder.build();
-    }
-    
-    
-    
 }

@@ -14,29 +14,22 @@ import websocket.Model.Nachricht;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.websocket.EncodeException;
-import javax.websocket.Endpoint;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import websocket.Model.Kartelegen;
-import websocket.Model.Spielerverwaltung;
 
 /**
  *
  * @author katha
  */
-@ServerEndpoint(value = "/websocket/{typ}")
+@ServerEndpoint("/websocket/{typ}")
 public class WebSocketEndpoint{
    
     
@@ -81,9 +74,10 @@ public class WebSocketEndpoint{
         
     @OnMessage
     public void handleMessage(String text, Session session, @PathParam("typ") String aufgabenTyp) throws IOException, EncodeException {
+        
         if(aufgabenTyp.equals("chat")){
+            Nachricht nachricht = new Nachricht(text);
             try {
-                Nachricht nachricht = new Nachricht(text);
                 String urlPfad = session.getRequestURI().getPath();
                 for (Session s : session.getOpenSessions()) {
                     if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
@@ -93,7 +87,22 @@ public class WebSocketEndpoint{
             } catch (IOException | EncodeException e) {
                 System.out.println("Error " + e.getMessage());
             }
+            if(nachricht.getText().equals("testAuswertung")){
+                Runde testRunde = new Runde(Spielverwaltung.getInstance().getAktSpiel().getSpielerMitUsername(nachricht.getSender()));
+                testRunde.setPunkteRe(0);
+                testRunde.setPunkteContra(240);
+                try {
+                    for (Session s : WebSocketVerwaltung.getInstance().kartelegenSetSession) {
+                        if (s.isOpen()) {
+                            s.getBasicRemote().sendObject(testRunde.getAuswertungJsonString());
+                        }
+                    }
+                } catch (IOException | EncodeException e) {
+                    System.out.println("Error " + e.getMessage());
+                }
+            }
         }
+        
         if(aufgabenTyp.equals("kartelegen")){
             JsonObject obj = Json.createReader(new StringReader(text)).readObject();
             Spieler spieler = Spielverwaltung.getInstance().getAktSpiel().getSpielerMitUsername(obj.getString("user"));
@@ -116,17 +125,26 @@ public class WebSocketEndpoint{
                 Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().getMapKarteSpieler().put(spieler, karte);
                 if(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().getMapKarteSpieler().size() == 4){
                     //Alle haben gelegt
+                    
+                    
                     sendeStich(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().auswerten(), session, spieler, karte);
+                    if(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().rundeBeendet()){
+                        Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().auswertung();
+                        sendeErgebnisRunde(session, Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde());
+                    }
                 }else{
                     sendeStich(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich(), session, spieler, karte);
                 }
 //                legeKarte(text,session);
             }
         }
+        
         if(aufgabenTyp.equals("kartenverteilen")){
             Spielverwaltung.getInstance().anzSpielerBereit++;
             if(Spielverwaltung.getInstance().anzSpielerBereit == 4){
-                Spielverwaltung.getInstance().starteNeuesSpiel();
+                if(Spielverwaltung.getInstance().getAktSpiel() == null){
+                    Spielverwaltung.getInstance().starteNeuesSpiel();
+                }
                 Spielverwaltung.getInstance().anzSpielerBereit = 0;
                 Runde runde = Spielverwaltung.getInstance().getAktSpiel().kartenGeben();
                 try {
@@ -141,21 +159,38 @@ public class WebSocketEndpoint{
                 }
             }
         }
+        
         if(aufgabenTyp.equals("ansage")){
             Kartelegen kartenlegen = new Kartelegen(text);
         }
+        
         if(aufgabenTyp.equals("spielerverwaltung")){
             session.getBasicRemote().sendObject(Spielverwaltung.getInstance().spielerlistToJSON());  
         }
-        
     }   
     
     public void sendeStich(Stich stich, Session session, Spieler spieler, Karte karte){
+        ArrayList<Karte> kartenVonSpieler = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getMapBlattSpieler().get(spieler);
+        kartenVonSpieler.remove(karte);
+        Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().mapBlattSpieler.put(spieler, kartenVonSpieler);
         try {
             String urlPfad = session.getRequestURI().getPath();
             for (Session s : session.getOpenSessions()) {
                 if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
                     s.getBasicRemote().sendObject(stich.getJsonFormat(spieler,karte));
+                }
+            }
+        } catch (IOException | EncodeException e) {
+            System.out.println("Error " + e.getMessage());
+        }
+    }
+    
+    public void sendeErgebnisRunde(Session session, Runde runde){
+        try {
+            String urlPfad = session.getRequestURI().getPath();
+            for (Session s : session.getOpenSessions()) {
+                if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
+                    s.getBasicRemote().sendObject(runde.getAuswertungJsonString());
                 }
             }
         } catch (IOException | EncodeException e) {

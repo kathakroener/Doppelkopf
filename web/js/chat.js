@@ -7,14 +7,14 @@
 var webSocketChat;
 var serverURLChat = "ws://" + window.location.hostname + ":8080/Doppelkopf/websocket/chat";
 
-function sendMessage() {
-    var msg = '{"text":"' + $(inputChatEingabe).val() + '", "sender":"'
-                + $username + '", "received":""}';
+function sendeNachricht() {
+    var msg = '{"text":"' + $('#inputChatEingabe').val() + '", "sender":"'
+                + username + '", "received":""}';
     webSocketChat.send(msg);
-    $(inputChatEingabe).val('').focus();
+    $('#inputChatEingabe').val('').focus();
 }
 
-function onChatMessageReceived(evt) {
+function empfangeNachricht(evt) {
     var msg = JSON.parse(evt.data);
     var $messageLine = $('<tr style=\"width:100%\"><td>' + msg.empfangen
 				+ ' </td><td> ' + msg.sender
@@ -24,12 +24,12 @@ function onChatMessageReceived(evt) {
 }
 
 $(document).ready(function() {
-    $username = $('#senderUsername').text();
+    username = $('#senderUsername').text();
     webSocketChat = new WebSocket(serverURLChat);
-    webSocketChat.onmessage = onChatMessageReceived;
+    webSocketChat.onmessage = empfangeNachricht;
     
     $('#buttonSendMessage').click(function(evt) {
-        sendMessage();
+        sendeNachricht();
     }); 
     
 })

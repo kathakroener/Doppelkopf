@@ -33,13 +33,13 @@ public class Stich {
     public Stich auswerten(){
         for(Entry<Spieler, Karte> entrySpielerKarte : mapKarteSpieler.entrySet()){
             if(stichGehoert == null || hoechsteKarte == null 
-                    || entrySpielerKarte.getValue().getId() > hoechsteKarte.getId()){
+                    || (entrySpielerKarte.getValue().istKarteTrumpf() && entrySpielerKarte.getValue().getId() > hoechsteKarte.getId())){
                 stichGehoert = entrySpielerKarte.getKey();
                 hoechsteKarte = entrySpielerKarte.getValue();
             }else if(!this.getErsteKarte().istKarteTrumpf()){
                 if((!entrySpielerKarte.getValue().istKarteTrumpf()
-                        && entrySpielerKarte.getValue().getFarbe().equals(this.getErsteKarte().getFarbe()) 
-                        && entrySpielerKarte.getValue().getId() > this.getErsteKarte().getId())
+                        && entrySpielerKarte.getValue().getFarbe() == this.getErsteKarte().getFarbe() 
+                        && entrySpielerKarte.getValue().getId() > hoechsteKarte.getId())
                         || entrySpielerKarte.getValue().istKarteTrumpf()){
                     stichGehoert = entrySpielerKarte.getKey();
                     hoechsteKarte = entrySpielerKarte.getValue();
@@ -65,7 +65,9 @@ public class Stich {
 
         //Blatt des übergebenen Spielers ermitteln        
         kartenVonSpieler = Spielverwaltung.getInstance().aktSpiel.getLetzteRunde().getMapBlattSpieler().get(spieler);
-        
+        if(gespielteKarte == null){
+            System.out.println("gespielteKarte == null");
+        }
         //TRUMPF: überprüfen, ob mit ausgewählter Karte falsch bedient würde
         if(!gespielteKarte.istKarteTrumpf() && spielerHatTrumpf(kartenVonSpieler) 
                 && this.getErsteKarte().istKarteTrumpf()){
@@ -76,9 +78,8 @@ public class Stich {
             return false;
         }else{
             //gelegte Karte aus dem Blatt des Spielers entfernen    
-            kartenVonSpieler.remove(gespielteKarte);
+//            kartenVonSpieler.remove(gespielteKarte);
 
-            Spielverwaltung.getInstance().aktSpiel.getLetzteRunde().mapBlattSpieler.put(spieler, kartenVonSpieler);
 
             return true;
         }
@@ -134,6 +135,7 @@ public class Stich {
             tmpStichGehoert = this.stichGehoert.getName();
         }
         return Json.createObjectBuilder()
+                .add("rundenAuswertung", false)
                 .add("stichGehoert", tmpStichGehoert)
                 .add("user", spieler.getName())
                 .add("kartenId", karte.getId())

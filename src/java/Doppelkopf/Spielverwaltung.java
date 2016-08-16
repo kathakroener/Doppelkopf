@@ -60,6 +60,31 @@ public class Spielverwaltung {
         aktSpiel = new Spiel(listSpieler);
     }
     
+    public String spielerlistToJSON(){
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+        if(this.getSpielerPlatz0() != null){
+            jsonObjectBuilder.add("Spieler0", this.getSpielerPlatz0().getName());
+        }else{
+            jsonObjectBuilder.add("Spieler0", "");
+        }
+        if(this.getSpielerPlatz1() != null){
+            jsonObjectBuilder.add("Spieler1", this.getSpielerPlatz1().getName());
+        }else{
+            jsonObjectBuilder.add("Spieler1", "");
+        }
+        if(this.getSpielerPlatz2() != null){
+            jsonObjectBuilder.add("Spieler2", this.getSpielerPlatz2().getName());
+        }else{
+            jsonObjectBuilder.add("Spieler2", "");
+        }
+        if(this.getSpielerPlatz3() != null){
+            jsonObjectBuilder.add("Spieler3", this.getSpielerPlatz3().getName());
+        }else{
+            jsonObjectBuilder.add("Spieler3", "");
+        }       
+        return jsonObjectBuilder.build().toString();
+    }
+    
     private Spielverwaltung() {
         this.aktSpiel = null;
         this.spielerPlatz0 = null;
@@ -115,29 +140,4 @@ public class Spielverwaltung {
     public void setSpielerPlatz3(Spieler spielerPlatz3) {
         this.spielerPlatz3 = spielerPlatz3;
     } 
-    
-    public String spielerlistToJSON(){
-        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
-        if(this.getSpielerPlatz0() != null){
-            jsonObjectBuilder.add("Spieler0", this.getSpielerPlatz0().getName());
-        }else{
-            jsonObjectBuilder.add("Spieler0", "");
-        }
-        if(this.getSpielerPlatz1() != null){
-            jsonObjectBuilder.add("Spieler1", this.getSpielerPlatz1().getName());
-        }else{
-            jsonObjectBuilder.add("Spieler1", "");
-        }
-        if(this.getSpielerPlatz2() != null){
-            jsonObjectBuilder.add("Spieler2", this.getSpielerPlatz2().getName());
-        }else{
-            jsonObjectBuilder.add("Spieler2", "");
-        }
-        if(this.getSpielerPlatz3() != null){
-            jsonObjectBuilder.add("Spieler3", this.getSpielerPlatz3().getName());
-        }else{
-            jsonObjectBuilder.add("Spieler3", "");
-        }       
-        return jsonObjectBuilder.build().toString();
-    }
 }

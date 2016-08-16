@@ -50,6 +50,7 @@ public class LoginServlet extends HttpServlet {
             out.println("<title>Kurrelaner Dullentreff - Login</title>");
             out.println("<script src='js/jquery-3.1.0.js'></script>");
             out.println("<script src='js/bootstrap.js'></script>");
+            out.println("<script src='js/jquery.noty.packaged.min.js'></script>");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-theme.css\">");
             out.println("</head>");

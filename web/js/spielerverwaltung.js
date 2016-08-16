@@ -8,6 +8,7 @@ var spielerLinks = "";
 var spielerOben = "";
 var spielerRechts = "";
 var eigenerPlatz;
+var username;
 
 var webSocketSpielerverwaltung;
 var serverURLSpielerverwaltung = "ws://" + window.location.hostname + ":8080/Doppelkopf/websocket/spielerverwaltung";
@@ -18,7 +19,7 @@ function serverUpdateSpieler(event) {
 }
 
 $(document).ready(function() {
-    $username = $('#senderUsername').text();
+    username = $('#senderUsername').text();
     eigenerPlatz = $('#eigenerPlatz').text();
     webSocketSpielerverwaltung = new WebSocket(serverURLSpielerverwaltung);
     webSocketSpielerverwaltung.onmessage = serverUpdateSpieler; 
@@ -31,6 +32,8 @@ $(document).ready(function() {
     if($("#pSpielerRechts").text() != "offline"){
         spielerRechts = $("#pSpielerRechts").text();
     }
+    
+    
     checkVierSpielerAnwesend();
     $('#buttonBereitZuSpielen').click(function(evt) {
         bereitZumSpielen();
@@ -72,6 +75,11 @@ function spielerUpdate(spieler0, spieler1, spieler2, spieler3){
 
 function checkVierSpielerAnwesend(){
     if(spielerOben != "" && spielerLinks != "" && spielerRechts != ""){
+        // Setzt den Hintergrund der Modals auf static. Verhindert, dass das Modal geschlossen wird, wenn der User neben das Modal klickt 
+        $('#modalBereitZuSpielen').modal({
+            backdrop: 'static',
+            keyboard: false
+        })
         $('#modalBereitZuSpielen').modal('show');
     }
 }

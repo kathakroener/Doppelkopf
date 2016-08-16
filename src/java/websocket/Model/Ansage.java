@@ -10,7 +10,7 @@ import Doppelkopf.Spieler;
 
 /**
  *
- * @author hrs
+ * @author katha
  */
 public class Ansage {
     Spieler spieler;

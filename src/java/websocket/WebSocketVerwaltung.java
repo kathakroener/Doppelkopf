@@ -11,7 +11,7 @@ import javax.websocket.Session;
 
 /**
  *
- * @author hrs
+ * @author katha
  */
 public class WebSocketVerwaltung {
     
