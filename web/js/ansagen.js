@@ -11,8 +11,11 @@ var serverURLAnsagen = "ws://" + window.location.hostname + ":8080/Doppelkopf/we
 function empfangeAnsage(jsonAnsage) {
     var ansageObject = JSON.parse(jsonAnsage.data);
 
-    $('#chatVerlauf').append('<tr style=\"width:100%, font-color:green;\"><td>'+ansageObject.ansage+'</td></tr>');
-    
+    $('#chatVerlauf').append('<tr style=\"width:100%\"><td style=\"font-weight: bold;color:red;align:left\">' + ansageObject.username + ': '+ansageObject.ansage+'</td></tr>');
+    var chatVerlauf = $('#chatVerlauf');
+    if(chatVerlauf.length){
+        chatVerlauf.scrollTop(chatVerlauf[0].scrollHeight - chatVerlauf.height());
+    }
     if(ansageObject.ansage == $('#buttonAnsage')[0].innerHTML){
         if(ansageObject.ansage == "Re"){
             $('#buttonAnsage')[0].innerHTML = "Re Keine 90";

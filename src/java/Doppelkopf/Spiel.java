@@ -96,8 +96,6 @@ public class Spiel {
         return null;
     }
     
-    
-    
     public Runde kartenGeben() throws IOException, EncodeException{
         listKartenFuellen();
         Spieler kommtRaus = listSpieler.get(zaehler);

@@ -112,6 +112,61 @@ public class SpielServlet extends HttpServlet {
 "<div class=\"container-fluid text-center\">\n" +
 "  <div class=\"row content\">\n" +
 "    <div class=\"col-sm-3 sidenav\">\n" +
+"      <table id=\"auswertungstabelle\" class=\"table table-striped\">\n" +
+"           <thead>\n" +
+"               <tr>\n" +
+"                   <th id=\"thSpielerLinks\">" + this.spielerLinks + "</th>\n" +
+"                   <th id=\"thSpielerOben\">" + this.spielerOben + "</th>\n" +
+"                   <th id=\"thSpielerRechts\">" + this.spielerRechts + "</th>\n" +
+"                   <th id=\"thSpielerUnten\">" + session.getAttribute("username") + "</th>\n" +
+"                   <th>Tacken</th>\n" +
+"               </tr>\n" +
+"           </thead>\n" +
+"           <tbody id=\"tableBodyAuswertung\">\n" +
+//"               <tr>" +
+//"                   <td>-2</td>\n" +
+//"                   <td>2</td>\n" +
+//"                   <td>-2</td>\n" +
+//"                   <td>2</td>\n" +
+//"                   <td>2</td>\n" +
+//"              </tr>\n" +  
+//"               <tr>" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>2</td>\n" +
+//"              </tr>\n" +
+//"               <tr>" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>2</td>\n" +
+//"              </tr>\n" +
+//"               <tr>" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>2</td>\n" +
+//"              </tr>\n" +
+//"               <tr>" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>2</td>\n" +
+//"              </tr>\n" +
+//"               <tr>" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>0</td>\n" +
+//"                   <td>2</td>\n" +
+//"              </tr>\n" +
+"           </tbody>\n" +
+"      </table>\n" +                   
 "    </div>\n" +
 "    <div class=\"col-sm-6\">\n"+
                     "    <div id=\"spielfeldNutzer\">\n"+

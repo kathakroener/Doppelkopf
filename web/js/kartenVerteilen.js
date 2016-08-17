@@ -25,7 +25,7 @@ $(document).ready(function() {
         bereitZumSpielen();
     }); 
     $('#buttonModalLogout').click(function(evt) {
-        bereitZumSpielen();
+       $('#buttonLogout').click();
     }); 
 })
 

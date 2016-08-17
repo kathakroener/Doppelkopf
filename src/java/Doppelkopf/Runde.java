@@ -5,12 +5,17 @@
  */
 package Doppelkopf;
 
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
@@ -22,20 +27,25 @@ public class Runde {
     private int punkteRe;
     private int punkteContra;
     private ArrayList<Stich> stiche;
-    private LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler;
+    private ArrayList<ANSAGEN> reAnsagenList;
+    private ArrayList<ANSAGEN> contraAnsagenList;
     private Spieler kommtRaus;
     private ArrayList<Spieler> listSpielerRe;
     private ArrayList<Spieler> listSpielerContra;
     public LinkedHashMap<Spieler, ArrayList<Karte>> mapBlattSpieler;
     private int tackenRe;
+    private int tackenContra;
+    private AuswertungRunde auswertungRunde;
 
     public Runde(Spieler kommtRaus) {
         this.mapBlattSpieler = new LinkedHashMap<>();
-        this.mapAnsagenSpieler = new LinkedHashMap<>();
+        this.reAnsagenList = new ArrayList();
+        this.contraAnsagenList = new ArrayList();
         this.listSpielerRe = new ArrayList<>();
         this.listSpielerContra = new ArrayList<>();
         this.stiche = new ArrayList<>();
         this.kommtRaus = kommtRaus;
+        this.auswertungRunde = null;
     }
     
     public void fuelleListenKontraRe(ArrayList<Spieler> listSpieler){
@@ -54,9 +64,56 @@ public class Runde {
         }
     }
     
+    public void ansageAuswerten(String ansagenJson){
+        JsonObject obj = Json.createReader(new StringReader(ansagenJson)).readObject();
+        String ansage = obj.getString("ansage");
+        String username = obj.getString("username");
+        Spieler spieler = null;
+        for(Spieler spielerFromList : Spielverwaltung.getInstance().getAktSpiel().getListSpieler()){
+            if(spielerFromList.getName().equals(username)){
+                spieler = spielerFromList;
+            }
+        }
+        if(spieler != null){
+            if(ansage.equals("Re") ){
+               this.reAnsagenList.add(ANSAGEN.KEINE120);
+            }
+            if(ansage.equals("Re Keine 90")){
+                this.reAnsagenList.add(ANSAGEN.KEINE90);
+            }
+            if(ansage.equals("Re Keine 60")){
+                this.reAnsagenList.add(ANSAGEN.KEINE60);
+            }
+            if(ansage.equals("Re Keine 30")){
+                this.reAnsagenList.add(ANSAGEN.KEINE30);
+            }
+            if(ansage.equals("Re Schwarz")){
+                this.reAnsagenList.add(ANSAGEN.SCHWARZ);
+            }
+            
+            if(ansage.equals("Contra")){
+                this.contraAnsagenList.add(ANSAGEN.KEINE120);
+            }
+            if(ansage.equals("Contra Keine 90")){
+                this.contraAnsagenList.add(ANSAGEN.KEINE90);
+            }
+            if(ansage.equals("Contra Keine 60")){
+                this.contraAnsagenList.add(ANSAGEN.KEINE60);
+            }
+            if(ansage.equals("Contra Keine 30")){
+                this.contraAnsagenList.add(ANSAGEN.KEINE30);
+            }
+            if(ansage.equals("Contra Schwarz")){
+                this.contraAnsagenList.add(ANSAGEN.SCHWARZ);
+            }
+        }
+    }
+    
     public void auswertung(){
         berechnePunkte();
-        berechneTackenRe();
+        this.auswertungRunde = new AuswertungRunde(this.punkteRe, this.punkteContra, this.reAnsagenList, this.contraAnsagenList);
+        this.tackenRe = auswertungRunde.getReGesamt() - auswertungRunde.getContraGesamt();
+        this.tackenContra = auswertungRunde.getContraGesamt() - auswertungRunde.getReGesamt();
     }
     
     public void berechnePunkte(){
@@ -196,7 +253,7 @@ public class Runde {
         
         return Json.createObjectBuilder()
                 .add("rundenAuswertung", true)
-                .add("auswertungRunde", new AuswertungRunde(this.punkteRe, this.punkteContra, this.mapAnsagenSpieler).getJsonObjectAuswertungRunde())
+                .add("auswertungRunde", new AuswertungRunde(this.punkteRe, this.punkteContra, this.reAnsagenList, this.contraAnsagenList).getJsonObjectAuswertungRunde())
                 .add("spielerRe", jsonArrayBuilderListSpielerRe.build())
                 .add("spielerContra", jsonArrayBuilderListSpielerContra.build())
                 .build().toString();   
@@ -281,12 +338,20 @@ public class Runde {
         this.stiche = stiche;
     }
 
-    public LinkedHashMap<ANSAGEN, Spieler> getMapAnsagenSpieler() {
-        return mapAnsagenSpieler;
+    public ArrayList<ANSAGEN> getReAnsagenList() {
+        return reAnsagenList;
     }
 
-    public void setMapAnsagenSpieler(LinkedHashMap<ANSAGEN, Spieler> mapAnsagenSpieler) {
-        this.mapAnsagenSpieler = mapAnsagenSpieler;
+    public void setReAnsagenList(ArrayList<ANSAGEN> reAnsagenList) {
+        this.reAnsagenList = reAnsagenList;
+    }
+
+    public ArrayList<ANSAGEN> getContraAnsagenList() {
+        return contraAnsagenList;
+    }
+
+    public void setContraAnsagenList(ArrayList<ANSAGEN> contraAnsagenList) {
+        this.contraAnsagenList = contraAnsagenList;
     }
 
     public Spieler getKommtRaus() {

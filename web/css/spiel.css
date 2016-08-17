@@ -15,6 +15,43 @@ and open the template in the editor.
     max-height: 100px; 
 }
 
+/*#auswertungstabelle{
+    overflow-y: auto;
+    resize: none;
+    height: 100px;
+    max-height: 100px; 
+    width:100%;
+}*/
+
+#auswertungstabelle thead {
+    width:100%; 
+    display: block; 
+}
+
+#auswertungstabelle tbody {
+    display: block; 
+    height: 130px;
+    overflow: auto;
+}
+
+#auswertungstabelle tr {
+    width: 100%; 
+    table-layout:fixed;
+}
+
+#auswertungstabelle td, #auswertungstabelle th {
+    width: 2%; 
+}
+
+
+
+#auswertungstabelle tbody{
+    overflow-y: scroll;
+    resize: none;
+    height: 86px;
+    max-height: 86px; 
+}
+
 #inputChatEingabe{
     float: left;
     width: 75%;

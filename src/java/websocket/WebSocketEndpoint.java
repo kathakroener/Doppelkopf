@@ -73,29 +73,13 @@ public class WebSocketEndpoint {
 
         if (aufgabenTyp.equals("chat")) {
             Nachricht nachricht = new Nachricht(text);
-            try {
-                String urlPfad = session.getRequestURI().getPath();
-                for (Session s : session.getOpenSessions()) {
-                    if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
-                        s.getBasicRemote().sendObject(nachricht.toJSON());
-                    }
-                }
-            } catch (IOException | EncodeException e) {
-                System.out.println("Error " + e.getMessage());
-            }
+            this.sendeAnAlleVierSpieler(session, nachricht.toJSON());
+            
             if (nachricht.getText().equals("testAuswertung")) {
-                Runde testRunde = new Runde(Spielverwaltung.getInstance().getAktSpiel().getSpielerMitUsername(nachricht.getSender()));
+                Runde testRunde = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde();
                 testRunde.setPunkteRe(0);
                 testRunde.setPunkteContra(240);
-                try {
-                    for (Session s : WebSocketVerwaltung.getInstance().kartelegenSetSession) {
-                        if (s.isOpen()) {
-                            s.getBasicRemote().sendObject(testRunde.getAuswertungJsonString());
-                        }
-                    }
-                } catch (IOException | EncodeException e) {
-                    System.out.println("Error " + e.getMessage());
-                }
+                this.sendeAnAlleVierSpieler(session, testRunde.getAuswertungJsonString());
             }
         }
 
@@ -108,7 +92,6 @@ public class WebSocketEndpoint {
             Stich aktuellerOffenerStich = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich();
 
             if (aktuellerOffenerStich == null) { // Erste Karte in einem Stich
-//                legeKarte(text,session);
                 Stich stich = new Stich();
                 stich.getMapKarteSpieler().put(spieler, karte);
                 ArrayList<Stich> stiche = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getStiche();
@@ -120,7 +103,6 @@ public class WebSocketEndpoint {
                 Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().getMapKarteSpieler().put(spieler, karte);
                 if (Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().getMapKarteSpieler().size() == 4) {
                     //Alle haben gelegt
-
                     sendeStich(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich().auswerten(), session, spieler, karte);
                     if (Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().rundeBeendet()) {
                         Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().auswertung();
@@ -129,7 +111,6 @@ public class WebSocketEndpoint {
                 } else {
                     sendeStich(Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().getAktuellerOffenerStich(), session, spieler, karte);
                 }
-//                legeKarte(text,session);
             }
         }
 
@@ -142,21 +123,13 @@ public class WebSocketEndpoint {
                 Spielverwaltung.getInstance().anzSpielerBereit = 0;
 
                 Runde runde = Spielverwaltung.getInstance().getAktSpiel().kartenGeben();
-                try {
-                    String urlPfad = session.getRequestURI().getPath();
-                    for (Session s : session.getOpenSessions()) {
-                        if (s.isOpen() && s.getRequestURI().getPath().equals(urlPfad)) {
-                            s.getBasicRemote().sendObject(runde.blattToJSON());
-                        }
-                    }
-                } catch (IOException | EncodeException e) {
-                    System.out.println("Error " + e.getMessage());
-                }
+                this.sendeAnAlleVierSpieler(session, runde.blattToJSON());
 
             }
         }
 
         if (aufgabenTyp.equals("ansage")) {
+            Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().ansageAuswerten(text);
             sendeAnAlleVierSpieler(session, text);
         }
     }

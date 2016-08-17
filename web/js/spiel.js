@@ -8,6 +8,8 @@ var tmpImgIdGelegteKarte;
 var webSocketKartelegen;
 var kommtRaus;
 var serverURLKartelegen = "ws://" + window.location.hostname + ":8080/Doppelkopf/websocket/kartelegen";
+var istRe;
+var istKontra;
 
 function serverNachricht(event) {
     var jsonObjectServer = JSON.parse(event.data);
@@ -20,7 +22,9 @@ function serverNachricht(event) {
 
 $(document).ready(function() {
     webSocketKartelegen = new WebSocket(serverURLKartelegen);
-    webSocketKartelegen.onmessage = serverNachricht;    
+    webSocketKartelegen.onmessage = serverNachricht;  
+    istKontra = false;
+    istRe = false;
 })
 
 function legeKarte(kartenId, bildpfad, imgIdGelegteKarte){

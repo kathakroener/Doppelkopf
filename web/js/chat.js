@@ -16,9 +16,9 @@ function sendeNachricht() {
 
 function empfangeNachricht(evt) {
     var msg = JSON.parse(evt.data);
-    var chatNachricht = $('<tr style=\"width:100%\"><td>' + msg.empfangen
-				+ ' </td><td> ' + msg.sender
-				+ ': </td><td> ' + msg.text
+    var chatNachricht = $('<tr style=\"width:100%\"><td style:\"align:left\">' + msg.empfangen
+				+ ' </td><td style:\"align:center\"> ' + msg.sender
+				+ ': </td><td style:\"align:right\"> ' + msg.text
 				+ '</td></tr>');
     var chatVerlauf = $('#chatVerlauf');
     $('#chatVerlauf').append(chatNachricht);

@@ -63,18 +63,24 @@ function spielerUpdate(spieler0, spieler1, spieler2, spieler3){
     }
     if(spielerOben != ""){
        document.getElementById('pSpielerOben').innerHTML = spielerOben;
+       $('#thSpielerOben').innerHTML = spielerOben;
     }else{
         document.getElementById('pSpielerOben').innerHTML = 'offline';
+        $('#thSpielerOben').innerHTML = 'offline';
     }
     if(spielerLinks != ""){
         document.getElementById('pSpielerLinks').innerHTML = spielerLinks;
+        $('#thSpielerLinks').innerHTML = spielerLinks;
     }else{
         document.getElementById('pSpielerLinks').innerHTML = 'offline';
+        $('#thSpielerLinks').innerHTML = 'offline';
     }
     if(spielerRechts != ""){
         document.getElementById('pSpielerRechts').innerHTML = spielerRechts;
+        $('#thSpielerRechts').innerHTML = spielerRechts;
     }else{
         document.getElementById('pSpielerRechts').innerHTML = 'offline';
+        $('#thSpielerRechts').innerHTML = 'offline';
     }
     checkVierSpielerAnwesend();
 }
