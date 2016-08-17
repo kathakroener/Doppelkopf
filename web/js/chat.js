@@ -16,12 +16,12 @@ function sendeNachricht() {
 
 function empfangeNachricht(evt) {
     var msg = JSON.parse(evt.data);
-    var $messageLine = $('<tr style=\"width:100%\"><td>' + msg.empfangen
+    var chatNachricht = $('<tr style=\"width:100%\"><td>' + msg.empfangen
 				+ ' </td><td> ' + msg.sender
 				+ ': </td><td> ' + msg.text
 				+ '</td></tr>');
     var chatVerlauf = $('#chatVerlauf');
-    $('#chatVerlauf').append($messageLine);
+    $('#chatVerlauf').append(chatNachricht);
     if(chatVerlauf.length){
         chatVerlauf.scrollTop(chatVerlauf[0].scrollHeight - chatVerlauf.height());
     }

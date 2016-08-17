@@ -53,6 +53,7 @@ public class SpielServlet extends HttpServlet {
             out.println("<script src='js/spielerverwaltung.js'></script>");
             out.println("<script src='js/kartenVerteilen.js'></script>");
             out.println("<script src='js/spiel.js'></script>");
+            out.println("<script src='js/ansagen.js'></script>");
             out.println("<script src='js/jquery-ui.js'></script>");
             out.println("<script src='js/jquery.noty.packaged.min.js'></script>");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");        

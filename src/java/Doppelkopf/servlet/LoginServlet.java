@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet {
             if (response.getHeader("alertText") != null) {
                 out.println("<div class=\"alert alert-danger\">\n"
                         + "  <a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\n"
-                        + "  <strong>Fehler!</strong> Login nicht erfolgreich\n"
+                        + "  <strong>Fehler!</strong> " + response.getHeader("alertText") + "\n"
                         + "</div>");
             }
             out.println(""
@@ -119,17 +119,8 @@ public class LoginServlet extends HttpServlet {
                 User user = DbController.getInstance().getUser(request.getParameter("username"));
 
                 if (user != null) {
-                    if (Spielverwaltung.getInstance().getAktSpiel() != null) {
-                        boolean nutzerBereitsEingeloggt = false;
-                        for (Spieler spieler : Spielverwaltung.getInstance().getAktSpiel().getListSpieler()) {
-                            if (spieler.getName().equals(user.getUsername())) {
-                                response.addHeader("alertText", "Dieser Nutzer ist bereits eingeloggt!");
-                                nutzerBereitsEingeloggt = true;
-                            }
-                        }
-                        if(!nutzerBereitsEingeloggt){
-                            response.addHeader("alertText", "Leider sind schon vier Spieler eingeloggt");
-                        }
+                    if(istUserSchonEingeloggt(user.getUsername())){
+                        response.addHeader("alertText", "Dieser Nutzer ist bereits eingeloggt.");
                     }else{
                         int platz = Spielverwaltung.getInstance().doLogin(user);
                         if (platz > -1) {
@@ -151,6 +142,30 @@ public class LoginServlet extends HttpServlet {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         processRequest(request, response);
+    }
+    
+    public boolean istUserSchonEingeloggt(String username){
+        if(Spielverwaltung.getInstance().getSpielerPlatz0() != null){
+            if(Spielverwaltung.getInstance().getSpielerPlatz0().getName().equals(username)){
+                return true;
+            }
+        }
+        if(Spielverwaltung.getInstance().getSpielerPlatz1() != null){
+            if(Spielverwaltung.getInstance().getSpielerPlatz1().getName().equals(username)){
+                return true;
+            }
+        }
+        if(Spielverwaltung.getInstance().getSpielerPlatz2() != null){
+            if(Spielverwaltung.getInstance().getSpielerPlatz2().getName().equals(username)){
+                return true;
+            }
+        }
+        if(Spielverwaltung.getInstance().getSpielerPlatz3() != null){
+            if(Spielverwaltung.getInstance().getSpielerPlatz3().getName().equals(username)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
