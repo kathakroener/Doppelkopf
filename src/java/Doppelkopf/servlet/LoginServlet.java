@@ -8,6 +8,7 @@ package Doppelkopf.servlet;
 import Controller.DbController;
 import Controller.LoginController;
 import DbModel.User;
+import Doppelkopf.Spieler;
 import Doppelkopf.Spielverwaltung;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "Login", urlPatterns = {"/Login"})
 public class LoginServlet extends HttpServlet {
-    
+
     HttpSession session;
 
     /**
@@ -52,28 +53,31 @@ public class LoginServlet extends HttpServlet {
             out.println("<script src='js/bootstrap.js'></script>");
             out.println("<script src='js/jquery.noty.packaged.min.js'></script>");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/login.css\">");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-theme.css\">");
             out.println("</head>");
             out.println("<body>");
-            if(response.getHeader("alertText") != null){
-                out.println("<div class=\"alert alert-danger\">\n" +
-"  <a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\n" +
-"  <strong>Fehler!</strong> Login nicht erfolgreich\n" +
-"</div>");
+            if (response.getHeader("alertText") != null) {
+                out.println("<div class=\"alert alert-danger\">\n"
+                        + "  <a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\n"
+                        + "  <strong>Fehler!</strong> Login nicht erfolgreich\n"
+                        + "</div>");
             }
-            out.println("<h1>Kurrelaner Dullentreff</h1>");
-            out.println("<form action='"+request.getContextPath()+"/Login' method='POST' class=\"form-inline\" role=\"form\">\n" +
-"    <div class=\"form-group\">\n" +
-"      <label class=\"sr-only\" for=\"username\">Username:</label>\n" +
-"      <input type=\"text\" class=\"form-control\" id=\"username\" name=\"username\" placeholder=\"Username\">\n" +
-"    </div>\n" +
-"    <div class=\"form-group\">\n" +
-"      <label class=\"sr-only\" for=\"passwort\">Passwort:</label>\n" +
-"      <input type=\"password\" class=\"form-control\" id=\"passwort\" name=\"passwort\" placeholder=\"Passwort\">\n" +
-"    </div>\n" +
-"    <button type=\"submit\" class=\"btn btn-default\">Login</button>\n" +
-"  </form>");
-            
+            out.println(""
+                    + "<dic class=\"container\">"
+                    + "   <form action='" + request.getContextPath() + "/Login' method='POST' class=\"form-signin\" role=\"form\">\n"
+                    + "       <h1 class=\"form-signin-heading\">Login</h1>\n"
+                    + "       <h2 class=\"form-signin-heading\">Kurrelaner Dullentreff</h2>"
+                    + "       <label class=\"sr-only\" for=\"username\">Username:</label>\n"
+                    + "       <input type=\"text\" class=\"form-control\" id=\"username\" name=\"username\" placeholder=\"Username\">\n"
+                    + "       <label class=\"sr-only\" for=\"passwort\">Passwort:</label>\n"
+                    + "       <input type=\"password\" class=\"form-control\" id=\"passwort\" name=\"passwort\" placeholder=\"Passwort\">\n"
+                    + "       <button type=\"submit\" class=\"btn btn-lg btn-primary btn-block\">Login</button>\n"
+                    + "       <a href=\"Registrierung\">Noch nicht registriert?</a>"
+                    + "  </form>"
+                    + "</div>"
+            );
+
             out.println("");
             out.println("</body>");
             out.println("</html>");
@@ -92,7 +96,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         processRequest(request, response);
     }
 
@@ -107,21 +111,39 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         LoginController loginController = new LoginController();
         try {
-            if(loginController.checkLogin(request.getParameter("username"), request.getParameter("passwort"))){
+            if (loginController.checkLogin(request.getParameter("username"), request.getParameter("passwort"))) {
                 session = request.getSession();
                 User user = DbController.getInstance().getUser(request.getParameter("username"));
-                int platz = Spielverwaltung.getInstance().doLogin(user);
-                if(platz > -1){
-                    session.setAttribute("username", request.getParameter("username"));
-                    session.setAttribute("platz", platz);
-                    response.sendRedirect(request.getContextPath() + "/Spiel");
-                }else{
-                    response.addHeader("alertText", "Leider sind schon vier Spieler eingeloggt");
+
+                if (user != null) {
+                    if (Spielverwaltung.getInstance().getAktSpiel() != null) {
+                        boolean nutzerBereitsEingeloggt = false;
+                        for (Spieler spieler : Spielverwaltung.getInstance().getAktSpiel().getListSpieler()) {
+                            if (spieler.getName().equals(user.getUsername())) {
+                                response.addHeader("alertText", "Dieser Nutzer ist bereits eingeloggt!");
+                                nutzerBereitsEingeloggt = true;
+                            }
+                        }
+                        if(!nutzerBereitsEingeloggt){
+                            response.addHeader("alertText", "Leider sind schon vier Spieler eingeloggt");
+                        }
+                    }else{
+                        int platz = Spielverwaltung.getInstance().doLogin(user);
+                        if (platz > -1) {
+                            session.setAttribute("username", request.getParameter("username"));
+                            session.setAttribute("platz", platz);
+                            response.sendRedirect(request.getContextPath() + "/Spiel");
+                        } else {
+                            response.addHeader("alertText", "Leider sind schon vier Spieler eingeloggt");
+                        }
+                    }
+                } else {
+                    response.addHeader("alertText", "Login nicht erfolgreich. Username konnte nicht gefunden werden");
                 }
-            }else{
+            } else {
                 response.addHeader("alertText", "Falscher Login");
             }
         } catch (ClassNotFoundException | SQLException ex) {

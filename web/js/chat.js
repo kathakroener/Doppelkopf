@@ -20,16 +20,15 @@ function empfangeNachricht(evt) {
 				+ ' </td><td> ' + msg.sender
 				+ ': </td><td> ' + msg.text
 				+ '</td></tr>');
+    var chatVerlauf = $('#chatVerlauf');
     $('#chatVerlauf').append($messageLine);
+    if(chatVerlauf.length){
+        chatVerlauf.scrollTop(chatVerlauf[0].scrollHeight - chatVerlauf.height());
+    }
 }
 
 $(document).ready(function() {
     username = $('#senderUsername').text();
     webSocketChat = new WebSocket(serverURLChat);
-    webSocketChat.onmessage = empfangeNachricht;
-    
-    $('#buttonSendMessage').click(function(evt) {
-        sendeNachricht();
-    }); 
-    
+    webSocketChat.onmessage = empfangeNachricht;  
 })

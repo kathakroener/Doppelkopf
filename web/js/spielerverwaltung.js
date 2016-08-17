@@ -32,15 +32,15 @@ $(document).ready(function() {
     if($("#pSpielerRechts").text() != "offline"){
         spielerRechts = $("#pSpielerRechts").text();
     }
-    
-    
+
     checkVierSpielerAnwesend();
     $('#buttonBereitZuSpielen').click(function(evt) {
         bereitZumSpielen();
-    }); 
+    });
 })
 
 function spielerUpdate(spieler0, spieler1, spieler2, spieler3){
+    wurdeEinSpielerAusgeloggt(spieler0, spieler1, spieler2, spieler3);
     if(eigenerPlatz==0){
         spielerLinks = spieler1;
         spielerOben = spieler2;
@@ -63,12 +63,18 @@ function spielerUpdate(spieler0, spieler1, spieler2, spieler3){
     }
     if(spielerOben != ""){
        document.getElementById('pSpielerOben').innerHTML = spielerOben;
+    }else{
+        document.getElementById('pSpielerOben').innerHTML = 'offline';
     }
     if(spielerLinks != ""){
         document.getElementById('pSpielerLinks').innerHTML = spielerLinks;
+    }else{
+        document.getElementById('pSpielerLinks').innerHTML = 'offline';
     }
     if(spielerRechts != ""){
         document.getElementById('pSpielerRechts').innerHTML = spielerRechts;
+    }else{
+        document.getElementById('pSpielerRechts').innerHTML = 'offline';
     }
     checkVierSpielerAnwesend();
 }
@@ -81,5 +87,24 @@ function checkVierSpielerAnwesend(){
             keyboard: false
         })
         $('#modalBereitZuSpielen').modal('show');
+    }
+}
+
+function wurdeEinSpielerAusgeloggt(spieler0, spieler1, spieler2, spieler3){  
+    if(spielerOben != "" && spielerLinks != "" && spielerRechts != ""){
+        if(spieler0 != "" || spieler1 != "" || spieler2 != "" || spieler3 != ""){
+            $('#imgKarteOben')[0].src = "bilder/rahmen.jpg";
+            $('#imgKarteRechts')[0].src = "bilder/rahmen.jpg";
+            $('#imgKarteUnten')[0].src = "bilder/rahmen.jpg";
+            $('#imgKarteLinks')[0].src = "bilder/rahmen.jpg"; 
+            for(var i = 0; i < 10; i++){
+//                var linkLegeKarte = "#";
+//                document.getElementById("linkEigeneKarte"+i).href = linkLegeKarte;
+//                document.getElementById("eigeneKarte"+i).src = "bilder/rahmen.jpg";
+                $('#eigeneKarte'+i)[0].src = "bilder/rahmen.jpg";
+                $('#linkEigeneKarte'+i)[0].href = "#";
+            }
+            noty({text: 'Das Spiel ist vorbei. Ein Nutzer hat sich ausgeloggt', type: 'error'});
+        }   
     }
 }

@@ -62,20 +62,23 @@ public class DbController {
         return user;
     }
     
-    public void insertUser(User user) throws SQLException{
-        Connection conn = null;
+    public boolean insertUser(String username, String passwort) throws SQLException, ClassNotFoundException{
+        Connection conn = getConnection();
         try{
-          String query = "Insert into user ('username','passwort','gesTacken') Values(?,?,?)";
+          String query = "INSERT INTO `user`(`username`, `passwort`, `gesTacken`) VALUES (?,?,?)";
           PreparedStatement preparedStmt;
           preparedStmt = conn.prepareStatement(query);
-          preparedStmt.setString(1, user.getUsername());
-          preparedStmt.setString(2, user.getPasswort());
-          preparedStmt.setInt(3, user.getGesTacken());
+          preparedStmt.setString(1, username);
+          preparedStmt.setString(2, passwort);
+          preparedStmt.setInt(3, 0);
           preparedStmt.executeUpdate();
           preparedStmt.close();
         }catch (SQLException ex) {
             System.out.println(ex.getMessage());
+            conn.close();
+            return false;
         }
         conn.close();
+        return true;
     }
 }

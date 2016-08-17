@@ -5,6 +5,7 @@
  */
 package Doppelkopf;
 
+import Controller.DbController;
 import DbModel.User;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,25 +30,52 @@ public class Spielverwaltung {
     public int doLogin(User user){        
         if(spielerPlatz0 == null || spielerPlatz0.equals(user.getUsername())){
             spielerPlatz0 = new Spieler(user.getUsername());
-            WebSocketEndpoint.getInstance().neuerSpieler();
+            WebSocketEndpoint.getInstance().spielerUpdate();
             return 0;
         }
         if(spielerPlatz1 == null || spielerPlatz1.equals(user.getUsername())){
             spielerPlatz1 = new Spieler(user.getUsername());
-            WebSocketEndpoint.getInstance().neuerSpieler();
+            WebSocketEndpoint.getInstance().spielerUpdate();
             return 1;
         }
         if(spielerPlatz2 == null || spielerPlatz2.equals(user.getUsername())){
             spielerPlatz2 = new Spieler(user.getUsername());
-            WebSocketEndpoint.getInstance().neuerSpieler();
+            WebSocketEndpoint.getInstance().spielerUpdate();
             return 2;
         }
         if(spielerPlatz3 == null || spielerPlatz3.equals(user.getUsername())){
             spielerPlatz3 = new Spieler(user.getUsername());
-            WebSocketEndpoint.getInstance().neuerSpieler();
+            WebSocketEndpoint.getInstance().spielerUpdate();
             return 3;
         }
         return -1;
+    }
+    
+    public void doLogout(String username){
+        if(spielerPlatz0 != null){
+            if(spielerPlatz0.getName().equals(username)){
+                spielerPlatz0 = null;
+                WebSocketEndpoint.getInstance().spielerUpdate();
+            }
+        }
+        if(spielerPlatz1 != null){
+            if(spielerPlatz1.getName().equals(username)){
+                spielerPlatz1 = null;
+                WebSocketEndpoint.getInstance().spielerUpdate();
+            }
+        }
+        if(spielerPlatz2 != null){
+            if(spielerPlatz2.getName().equals(username)){
+                spielerPlatz2 = null;
+                WebSocketEndpoint.getInstance().spielerUpdate();
+            }
+        }
+        if(spielerPlatz3 != null){
+            if(spielerPlatz3.getName().equals(username)){
+                spielerPlatz3 = null;
+                WebSocketEndpoint.getInstance().spielerUpdate();
+            } 
+        }
     }
     
     public void starteNeuesSpiel(){

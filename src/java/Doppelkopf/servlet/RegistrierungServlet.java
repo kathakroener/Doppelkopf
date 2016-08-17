@@ -5,8 +5,12 @@
  */
 package Doppelkopf.servlet;
 
+import Controller.DbController;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,26 +44,38 @@ public class RegistrierungServlet extends HttpServlet {
             out.println("<title>Servlet RegistrierungServlet</title>");  
             out.println("<script src='js/jquery-3.1.0.js'></script>");
             out.println("<script src='js/bootstrap.js'></script>");
+            out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/login.css\">");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap.css\">");
             out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"css/bootstrap-theme.css\">");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RegistrierungServlet at " + request.getContextPath() + "</h1>");
-            out.println("<form action='"+request.getContextPath()+"/Registrierung' method='POST' role=\"form\">\n" +
-"    <div class=\"form-group\">\n" +
+            if(response.getHeader("alertText") != null){
+                out.println("<div class=\"alert alert-danger\">\n" +
+"  <a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>\n" +
+"  <strong>Fehler!</strong> " + response.getHeader("alertText") + "\n" +
+"</div>");
+            }
+            out.println(""+
+"<dic class=\"container\">"+
+"<form action='"+request.getContextPath()+"/Registrierung' class=\"form-signin\" method='POST' role=\"form\">\n" +
+"<h1 class=\"form-signin-heading\">Registrierung</h1>\n" +
+"<h2 class=\"form-signin-heading\">Kurrelaner Dullentreff</h2>\n" +
+
 "      <label class=\"sr-only\" for=\"username\">Username:</label>\n" +
-"      <input type=\"text\" class=\"form-control\" id=\"username\" placeholder=\"Username\">\n" +
-"    </div>\n" +
-"    <div class=\"form-group\">\n" +
+"      <input type=\"text\" class=\"form-control\" id=\"username\" name=\"username\" placeholder=\"Username\">\n" +
+
+
 "      <label class=\"sr-only\" for=\"passwort\">Password:</label>\n" +
-"      <input type=\"password\" class=\"form-control\" id=\"passwort\" placeholder=\"Passwort\">\n" +
-"    </div>\n" +
-    "<div class=\"form-group\">\n" +
+"      <input type=\"password\" class=\"form-control\" id=\"passwort\" name=\"passwort\" placeholder=\"Passwort\">\n" +
+
+
 "      <label class=\"sr-only\" for=\"passwort2\">Password:</label>\n" +
-"      <input type=\"password\" class=\"form-control\" id=\"passwort2\" placeholder=\"Passwort\">\n" +
-"    </div>\n" +
-"    <button type=\"submit\" class=\"btn btn-default\">Registrieren</button>\n" +
-"  </form>");
+"      <input type=\"password\" class=\"form-control\" id=\"passwort2\" name=\"passwort2\" placeholder=\"Passwort\">\n" +
+
+"    <button type=\"submit\" class=\"btn btn-lg btn-primary btn-block\">Registrieren</button>\n" +
+"    <a href=\"Login\">Zurück zum Login</a>" +
+"  </form>" +
+"</div>" );
             out.println("</body>");
             out.println("</html>");
         }
@@ -91,6 +107,29 @@ public class RegistrierungServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String username = request.getParameter("username");
+        String passwort = request.getParameter("passwort");
+        String passwortWiederholung = request.getParameter("passwort2");
+        if(passwort.equals(passwortWiederholung)){
+            try {
+                if(username.length() <= 15 && !username.contains(" ")){
+                    if(DbController.getInstance().getUser(request.getParameter("username")) == null){
+                        DbController.getInstance().insertUser(username, passwort);
+                        response.sendRedirect(request.getContextPath() + "/Login");
+                    }else{
+                        //Error-Meldung Nutzer gibt es schon
+                        response.addHeader("alertText", "Username existiert bereits!");
+                    }
+                }else{
+                    response.addHeader("alertText", "Bitte einen Usernamen mit höchstens 15 Zeichen nehmen und ohne Leerzeichen eingeben.");
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(RegistrierungServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            //Error-Meldung Passwörter nicht gleich
+            response.addHeader("alertText", "Die beiden eingegebenen Passwörter stimmen nicht überein!");
+        }
         processRequest(request, response);
     }
 

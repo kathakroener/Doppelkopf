@@ -101,35 +101,35 @@ public class Runde {
     }
     
     
-//    public void fuchsGefangen(){
-//        Karte fuchsGefunden = null;
-//        for(Stich s : stiche){
-//            for(Karte k : s.getMapKarteSpieler().keySet()){
-//                if(k.istKarteTrumpf() && k.getId() == 2){
-//                    
-//                    //überprüfen, ob der Stich eine höhere Karte als den Fuchs enthält
-//                    if(s.getHoechsteKarte().istKarteTrumpf() && s.getHoechsteKarte().getId() > 2){
-//                        //überprüfen, ob die höhere Karte aus dem gleichen Team kommt wie der Fuchs
-//                        if(re.contains(s.getStichGehoert()) && contra.contains(s.getMapKarteSpieler().get(k))){
-//                            tackenRe++;
-//                        } else if(contra.contains(s.getStichGehoert()) && re.contains(s.getMapKarteSpieler().get(k))){
-//                            tackenRe--;
-//                        }
-//                    }
-//                    
-//                    //überprüfen, ob mit dem ersten Fuchs ein zweiter gefangen wurde
-//                    if(fuchsGefunden != null && s.getHoechsteKarte().getId() == 2){
-//                        if(re.contains(s.getMapKarteSpieler().get(k)) && contra.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
-//                            tackenRe--;
-//                        } else if(contra.contains(s.getMapKarteSpieler().get(k)) && re.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
-//                            tackenRe++;
-//                        }
-//                    }
-//                    fuchsGefunden = k;
-//                }
-//            }
-//        }
-//    }
+    public void fuchsGefangen(){
+        Karte fuchsGefunden = null;
+        for(Stich s : stiche){
+            for(Karte k : s.getMapKarteSpieler().values()){
+                if(k.istKarteTrumpf() && k.getId() == 2){
+                    
+                    //überprüfen, ob der Stich eine höhere Karte als den Fuchs enthält
+                    if(s.getHoechsteKarte().istKarteTrumpf() && s.getHoechsteKarte().getId() > 2){
+                        //überprüfen, ob die höhere Karte aus dem gleichen Team kommt wie der Fuchs
+                        if(this.listSpielerRe.contains(s.getStichGehoert()) && this.listSpielerContra.contains(s.getMapKarteSpieler().get(k))){
+                            tackenRe++;
+                        } else if(this.listSpielerContra.contains(s.getStichGehoert()) && this.listSpielerRe.contains(s.getMapKarteSpieler().get(k))){
+                            tackenRe--;
+                        }
+                    }
+                    
+                    //überprüfen, ob mit dem ersten Fuchs ein zweiter gefangen wurde
+                    if(fuchsGefunden != null && s.getHoechsteKarte().getId() == 2){
+                        if(this.listSpielerRe.contains(s.getMapKarteSpieler().get(k)) && this.listSpielerContra.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
+                            tackenRe--;
+                        } else if(this.listSpielerContra.contains(s.getMapKarteSpieler().get(k)) && this.listSpielerRe.contains(s.getMapKarteSpieler().get(fuchsGefunden))){
+                            tackenRe++;
+                        }
+                    }
+                    fuchsGefunden = k;
+                }
+            }
+        }
+    }
     
     public Stich getLetzterAbgeschlossenerStich(){
         if(this.getStiche().isEmpty()){
@@ -210,6 +210,10 @@ public class Runde {
         Spieler spieler3 = Spielverwaltung.getInstance().spielerPlatz3;
         
         jsonObjectBuilder.add("kommtRaus", getKommtRaus().getName());
+        
+        jsonObjectBuilder.add("spielerRe", createJsonArrayForReSpieler(this.listSpielerRe));
+        jsonObjectBuilder.add("spielerContra", createJsonArrayForContraSpieler(this.listSpielerContra));
+        
         jsonObjectBuilder.add("0", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler0)));
         jsonObjectBuilder.add("1", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler1)));
         jsonObjectBuilder.add("2", createJsonArrayFromBlatt(this.mapBlattSpieler.get(spieler2)));
@@ -225,6 +229,30 @@ public class Runde {
             jsonObjectBuilder.add("id", karte.getId());
             jsonObjectBuilder.add("bildpfad", karte.getBildpfad());
             jsonArrayBuilder.add(jsonObjectBuilder.build());
+        }  
+        return jsonArrayBuilder.build();
+    }
+    
+    private JsonArray createJsonArrayForReSpieler(ArrayList<Spieler> listSpieler){
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        for(Spieler spieler : listSpieler){
+            if(this.listSpielerRe.contains(spieler)){
+                JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+                jsonObjectBuilder.add("name", spieler.getName());
+                jsonArrayBuilder.add(jsonObjectBuilder.build());
+            }
+        }  
+        return jsonArrayBuilder.build();
+    }
+    
+    private JsonArray createJsonArrayForContraSpieler(ArrayList<Spieler> listSpieler){
+        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+        for(Spieler spieler : listSpieler){
+            if(this.listSpielerContra.contains(spieler)){
+                JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+                jsonObjectBuilder.add("name", spieler.getName());
+                jsonArrayBuilder.add(jsonObjectBuilder.build());
+            }
         }  
         return jsonArrayBuilder.build();
     }

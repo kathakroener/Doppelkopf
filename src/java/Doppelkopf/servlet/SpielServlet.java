@@ -14,12 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import websocket.Model.Spielerverwaltung;
 
 /**
  *
  * @author katha
  */
+
 @WebServlet(name = "SpielServlet", urlPatterns = {"/Spiel"})
 public class SpielServlet extends HttpServlet {
     
@@ -64,25 +64,22 @@ public class SpielServlet extends HttpServlet {
             out.println("</style>");
             out.println("</head>");
             out.println("<body>");
-            
-            
             out.println("<label id=\"senderUsername\">" + session.getAttribute("username") + "</label>");
             out.println("<label id=\"eigenerPlatz\">" + session.getAttribute("platz") + "</label>");
             out.println("<div class=\"container-fluid text-center\" style=\"height=20%;\">\n" +
 "  <div class=\"row content\">\n" +
-"    <div class=\"col-sm-3 sidenav\" style=\"background-color:blue;height:100%\">\n" +
-
+"    <div class=\"col-sm-3 sidenav\">\n" + 
+"       <form role=\"form\" method=\"POST\">\n"+
+"           <button style=\"margin-top:3%; margin-bottom:3%; padding:10% 12px; font-size:150%;\" id=\"buttonLogout\" type=\"submit\" class=\"btn btn-primary btn-block\">Logout</button>\n" +
+"       </form>\n"+
 "    </div>\n" +
 "    <div class=\"col-sm-6 text-left\">\n" +
-                    "      <div class=\"well well-lg\">\n" +
-                    
+"       <div style=\"margin-top:3%; margin-bottom:3%\" class=\"well well-lg\">\n" +           
 "        <p id=\"pSpielerOben\" style=\"text-align='center';\">" + this.spielerOben + "</p>\n" +
-                    
 "      </div>\n" +
-
 "    </div>\n" +
 "    <div class=\"col-sm-3 sidenav\">\n" +
-
+"       <button style=\"margin-top:3%; margin-bottom:3%; padding:10% 12px; font-size:150%;\" id=\"buttonAnsage\" type=\"button\" disabled=true class=\"btn btn-primary btn-block\">Ansagen</button>\n" +
 "    </div>\n" +
 "  </div>\n" +
 "</div>\n" +
@@ -136,13 +133,13 @@ public class SpielServlet extends HttpServlet {
                     
 "    <div id=\"chat\" class=\"col-sm-3 \">\n"+
         "<div id=\"chatVerlauf\" class=\"table table-bordered\"></div>\n"+
-               
-"       <div class=\"form-group\">\n" +
-"  <input type=\"text\" class=\"form-control\" id=\"inputChatEingabe\" placeholder=\"Deine Nachricht\">\n" +
-" <button id=\"buttonSendMessage\" type=\"submit\" class=\"btn btn-default\">Send</button>\n" +
-                    "</div>\n" +
-
-"  </div>\n" +
+"<form action=\"javascript:;\" onsubmit=\"sendeNachricht()\" role=\"form\">"               +
+"   <div class=\"form-group\">\n" +
+"       <input type=\"text\" class=\"form-control\" id=\"inputChatEingabe\" placeholder=\"Deine Nachricht\">\n" +
+"       <button id=\"buttonSendMessage\" type=\"submit\" class=\"btn btn-primary\">Send</button>\n" +
+"   </div>\n" +
+"</form>" +
+"</div>\n" +
                     
                     
 "</div>"+
@@ -276,9 +273,7 @@ public class SpielServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // ToDo: SpielerUpdate senden!!!
-        
+            throws ServletException, IOException {   
         if(request.getSession().getAttribute("username") == null){
             response.addHeader("alertText", "Sie sind nicht eingeloggt");
             response.sendRedirect(request.getContextPath() + "/Login");
@@ -298,6 +293,10 @@ public class SpielServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String username = (String) request.getSession().getAttribute("username");
+        Spielverwaltung.getInstance().doLogout(username);
+        Spielverwaltung.getInstance().setAktSpiel(null);
+        response.sendRedirect(request.getContextPath() + "/Logout");
         processRequest(request, response);
     }
     

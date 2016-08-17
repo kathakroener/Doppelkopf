@@ -47,12 +47,10 @@ public class WebSocketEndpoint{
     
     @OnOpen
     public void onOpen(Session session, @PathParam("typ") String aufgabenTyp) throws IOException {
-//        session.getBasicRemote().sendText("Erfolg");
         
         if(aufgabenTyp.equals("chat")){
             WebSocketVerwaltung.getInstance().chatSetSession.add(session);
-        }
-//        session.getRequestURI().getPath()
+        }   
         
         if(aufgabenTyp.equals("ansage")){
             WebSocketVerwaltung.getInstance().ansageSetSession.add(session);
@@ -68,8 +66,7 @@ public class WebSocketEndpoint{
 
         if(aufgabenTyp.equals("spielerverwaltung")){
             WebSocketVerwaltung.getInstance().spielSetSession.add(session);
-        }
-        
+        }    
     }
         
     @OnMessage
@@ -146,6 +143,7 @@ public class WebSocketEndpoint{
                     Spielverwaltung.getInstance().starteNeuesSpiel();
                 }
                 Spielverwaltung.getInstance().anzSpielerBereit = 0;
+                
                 Runde runde = Spielverwaltung.getInstance().getAktSpiel().kartenGeben();
                 try {
                     String urlPfad = session.getRequestURI().getPath();
@@ -157,15 +155,12 @@ public class WebSocketEndpoint{
                 } catch (IOException | EncodeException e) {
                     System.out.println("Error " + e.getMessage());
                 }
+                
             }
         }
         
         if(aufgabenTyp.equals("ansage")){
             Kartelegen kartenlegen = new Kartelegen(text);
-        }
-        
-        if(aufgabenTyp.equals("spielerverwaltung")){
-            session.getBasicRemote().sendObject(Spielverwaltung.getInstance().spielerlistToJSON());  
         }
     }   
     
@@ -220,7 +215,7 @@ public class WebSocketEndpoint{
         }
     }
     
-    public void neuerSpieler(){
+    public void spielerUpdate(){
         try {
                 for (Session s : WebSocketVerwaltung.getInstance().spielSetSession) {
                     if (s.isOpen() ) {
