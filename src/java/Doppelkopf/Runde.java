@@ -64,7 +64,7 @@ public class Runde {
         }
     }
     
-    public void ansageAuswerten(String ansagenJson){
+    public void ansageHinzu(String ansagenJson){
         JsonObject obj = Json.createReader(new StringReader(ansagenJson)).readObject();
         String ansage = obj.getString("ansage");
         String username = obj.getString("username");

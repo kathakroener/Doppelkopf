@@ -63,24 +63,24 @@ function spielerUpdate(spieler0, spieler1, spieler2, spieler3){
     }
     if(spielerOben != ""){
        document.getElementById('pSpielerOben').innerHTML = spielerOben;
-       $('#thSpielerOben').innerHTML = spielerOben;
+       $('#thSpielerOben')[0].innerHTML = spielerOben;
     }else{
         document.getElementById('pSpielerOben').innerHTML = 'offline';
-        $('#thSpielerOben').innerHTML = 'offline';
+        $('#thSpielerOben')[0].innerHTML = 'offline';
     }
     if(spielerLinks != ""){
         document.getElementById('pSpielerLinks').innerHTML = spielerLinks;
-        $('#thSpielerLinks').innerHTML = spielerLinks;
+        $('#thSpielerLinks')[0].innerHTML = spielerLinks;
     }else{
         document.getElementById('pSpielerLinks').innerHTML = 'offline';
-        $('#thSpielerLinks').innerHTML = 'offline';
+        $('#thSpielerLinks')[0].innerHTML = 'offline';
     }
     if(spielerRechts != ""){
         document.getElementById('pSpielerRechts').innerHTML = spielerRechts;
-        $('#thSpielerRechts').innerHTML = spielerRechts;
+        $('#thSpielerRechts')[0].innerHTML = spielerRechts;
     }else{
         document.getElementById('pSpielerRechts').innerHTML = 'offline';
-        $('#thSpielerRechts').innerHTML = 'offline';
+        $('#thSpielerRechts')[0].innerHTML = 'offline';
     }
     checkVierSpielerAnwesend();
 }

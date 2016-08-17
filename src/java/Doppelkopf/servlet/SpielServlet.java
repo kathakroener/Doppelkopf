@@ -303,6 +303,7 @@ public class SpielServlet extends HttpServlet {
 "              </tr>\n" +  
 "           </tbody>\n" +
 "       </table>\n" +
+"        <h5 class=\"modal-title\" id=\"modalDeineTacken\" ></h5>\n" +
 "      </div>\n" +
 "      <div class=\"modal-footer\">\n" +
 "        <button id=\"buttonModalLogout\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Logout</button>\n" +

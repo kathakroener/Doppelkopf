@@ -17,49 +17,79 @@ function kartenverteilen(event) {
     noty({text: 'Die Runde geht los. ' + kommtRaus + ' kommt raus!', type: 'information'});
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     webSocketKartenverteilen = new WebSocket(serverURLKartenverteilen);
-    webSocketKartenverteilen.onmessage = kartenverteilen;  
-    
-    $('#buttonModalNaechsteRunde').click(function(evt) {
+    webSocketKartenverteilen.onmessage = kartenverteilen;
+
+    $('#buttonModalNaechsteRunde').click(function (evt) {
         bereitZumSpielen();
-    }); 
-    $('#buttonModalLogout').click(function(evt) {
-       $('#buttonLogout').click();
-    }); 
+    });
+    $('#buttonModalLogout').click(function (evt) {
+        $('#buttonLogout').click();
+    });
 })
 
-function bereitZumSpielen(){
-    if(bereit == false){
+function bereitZumSpielen() {
+    if (bereit == false) {
         bereit = true;
         var msg = 'bereit';
         webSocketKartenverteilen.send(msg);
     }
 }
 
-function zeigeKarten(listKarten){
+function zeigeKarten(listKarten) {
     $('#imgKarteOben')[0].src = "bilder/rahmen.jpg";
     $('#imgKarteRechts')[0].src = "bilder/rahmen.jpg";
     $('#imgKarteUnten')[0].src = "bilder/rahmen.jpg";
     $('#imgKarteLinks')[0].src = "bilder/rahmen.jpg";
-    for(var i = 0; i < 10; i++){
-        var linkLegeKarte = "javascript:legeKarte('" + listKarten[i].id +"','"+ listKarten[i].bildpfad + "','"+ "eigeneKarte"+i +"');";
-        document.getElementById("linkEigeneKarte"+i).href = linkLegeKarte;
-        document.getElementById("eigeneKarte"+i).src = listKarten[i].bildpfad;
+    for (var i = 0; i < 10; i++) {
+        var linkLegeKarte = "javascript:legeKarte('" + listKarten[i].id + "','" + listKarten[i].bildpfad + "','" + "eigeneKarte" + i + "');";
+        document.getElementById("linkEigeneKarte" + i).href = linkLegeKarte;
+        document.getElementById("eigeneKarte" + i).src = listKarten[i].bildpfad;
     }
 }
 
-function zeigeAnsagenButton(listSpielerRe, listSpielerContra){
-    for(var i = 0; i < listSpielerRe.length; i++){
-        if(listSpielerRe[i].name == username){
+function zeigeAnsagenButton(listSpielerRe, listSpielerContra) {
+    for (var i = 0; i < listSpielerRe.length; i++) {
+        if (listSpielerRe[i].name == username) {
             $('#buttonAnsage')[0].innerHTML = "Re";
             $('#buttonAnsage')[0].disabled = false;
+            istRe = true;
+            istContra = false;
         }
+        if (listSpielerRe[i].name == spielerLinks) {
+            istSpielerLinksRe = true;
+            istSpielerLinksContra = false;
+        }
+        if (listSpielerRe[i].name == spielerOben) {
+            istSpielerObenRe = true;
+            istSpielerObenContra = false;
+        }
+        if (listSpielerRe[i].name == spielerRechts) {
+            istSpielerRechtsRe = true;
+            istSpielerRechtsContra = false;
+        }
+
     }
-    for(var i = 0; i < listSpielerContra.length; i++){
-        if(listSpielerContra[i].name == username){
+    for (var i = 0; i < listSpielerContra.length; i++) {
+        if (listSpielerContra[i].name == username) {
             $('#buttonAnsage')[0].innerHTML = "Contra";
             $('#buttonAnsage')[0].disabled = false;
+            istRe = false;
+            istContra = true;
         }
+        if (listSpielerContra[i].name == spielerLinks) {
+            istSpielerLinksRe = false;
+            istSpielerLinksContra = true;
+        }
+        if (listSpielerContra[i].name == spielerOben) {
+            istSpielerObenRe = false;
+            istSpielerObenContra = true;
+        }
+        if (listSpielerContra[i].name == spielerRechts) {
+            istSpielerRechtsRe = false;
+            istSpielerRechtsContra = true;
+        }
+
     }
 }

@@ -79,7 +79,15 @@ public class WebSocketEndpoint {
                 Runde testRunde = Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde();
                 testRunde.setPunkteRe(0);
                 testRunde.setPunkteContra(240);
-                this.sendeAnAlleVierSpieler(session, testRunde.getAuswertungJsonString());
+                try {
+                    for (Session s : WebSocketVerwaltung.getInstance().kartelegenSetSession) {
+                        if (s.isOpen()) {
+                            s.getBasicRemote().sendObject(testRunde.getAuswertungJsonString());
+                        }
+                    }
+                } catch (IOException | EncodeException e) {
+                    System.out.println("Error " + e.getMessage());
+                }
             }
         }
 
@@ -129,7 +137,7 @@ public class WebSocketEndpoint {
         }
 
         if (aufgabenTyp.equals("ansage")) {
-            Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().ansageAuswerten(text);
+            Spielverwaltung.getInstance().getAktSpiel().getLetzteRunde().ansageHinzu(text);
             sendeAnAlleVierSpieler(session, text);
         }
     }

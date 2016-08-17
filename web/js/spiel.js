@@ -9,7 +9,13 @@ var webSocketKartelegen;
 var kommtRaus;
 var serverURLKartelegen = "ws://" + window.location.hostname + ":8080/Doppelkopf/websocket/kartelegen";
 var istRe;
-var istKontra;
+var istContra;
+var istSpielerLinksContra;
+var istSpielerObenContra;
+var istSpielerRechtsContra;
+var istSpielerLinksRe;
+var istSpielerObenRe;
+var istSpielerRechtsRe;
 
 function serverNachricht(event) {
     var jsonObjectServer = JSON.parse(event.data);
@@ -23,7 +29,7 @@ function serverNachricht(event) {
 $(document).ready(function() {
     webSocketKartelegen = new WebSocket(serverURLKartelegen);
     webSocketKartelegen.onmessage = serverNachricht;  
-    istKontra = false;
+    istContra = false;
     istRe = false;
 })
 
@@ -99,6 +105,53 @@ function rundenAuswertung(jsonObject){
     $('#modalTableZelleGesamtTackenRe')[0].innerHTML = reGesamt;
     var contraGesamt = jsonObject.auswertungRunde.contraGesamt;
     $('#modalTableZelleGesamtTackenContra')[0].innerHTML = contraGesamt;
+    
+    if(istContra == true){
+        $('#modalDeineTacken')[0].innerHTML = "Deine Tacken: " + (contraGesamt - reGesamt);
+    }
+    if(istRe == true){
+        $('#modalDeineTacken')[0].innerHTML = "Deine Tacken: " + (reGesamt - contraGesamt);
+    }
+    
+    var tackenSpielerLinks;
+    var tackenSpielerOben;
+    var tackenSpielerRechts;
+    var tackenSpielerUnten;
+    var tackenGes;
+    
+    if(istSpielerLinksRe == true){
+        tackenSpielerLinks = (reGesamt - contraGesamt);
+    }
+    if(istSpielerLinksContra == true){
+        tackenSpielerLinks = (contraGesamt - reGesamt);
+    }
+    if(istSpielerObenRe == true){
+        tackenSpielerOben = (reGesamt - contraGesamt);
+    }
+    if(istSpielerObenContra == true){
+        tackenSpielerOben = (contraGesamt - reGesamt);
+    }
+    if(istSpielerRechtsRe == true){
+        tackenSpielerRechts = (reGesamt - contraGesamt);
+    }
+    if(istSpielerRechtsContra == true){
+        tackenSpielerRechts = (contraGesamt - reGesamt);
+    }
+    if(istRe == true){
+        tackenSpielerUnten = (reGesamt - contraGesamt);
+    }
+    if(istContra == true){
+        tackenSpielerUnten = (contraGesamt - reGesamt);
+    }
+    if((contraGesamt - reGesamt) > 0){
+        tackenGes = contraGesamt;
+    }else{
+        tackenGes = reGesamt;
+    }
+    
+    var zeileErgebnistabelle = "<tr><td>"+tackenSpielerLinks+"</td><td>"+tackenSpielerOben+"</td><td>"+tackenSpielerRechts+"</td><td>"+tackenSpielerUnten+"</td><td>"+tackenGes+"</td></tr>";
+    
+    $('#tableBodyAuswertung').append(zeileErgebnistabelle);
     
     $('#modalRundenErgebnis').modal({
         backdrop: 'static',
